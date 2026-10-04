@@ -1,0 +1,1933 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231c5cab'/%3E%3Cpath d='M7 16.5 16 9l9 7.5V25a1 1 0 0 1-1 1h-5.5v-6h-5v6H8a1 1 0 0 1-1-1z' fill='%23fff'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Essex County Home Atlas">
+<meta property="og:description" content="Every home in fifteen Essex County, MA towns ranked by value, with the assessor's blind spots corrected: farm-rate land, stale sizes, apartment blocks coded as houses, and more.">
+<meta property="og:url" content="https://astefanidis1.github.io/essex-county-home-atlas/">
+<meta property="og:image" content="https://astefanidis1.github.io/essex-county-home-atlas/assets/preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<title>Essex County Home Atlas</title>
+<meta name="description" content="Every home in Andover, Beverly, Boxford, Georgetown, Gloucester, Ipswich, Lynn, Lynnfield, Marblehead, Middleton, Newburyport, North Andover, Salem, Swampscott, and Topsfield, MA ranked by value, with the assessor's blind spots corrected, a zoomable lot map, near-me rankings, town records, and a 3D skyline.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  --bg: #f3f5f2;
+  --surface: #ffffff;
+  --surface-2: #f7f9f6;
+  --ink: #111a15;
+  --ink-2: #48554e;
+  --muted: #66726b;
+  --line: #dde3dd;
+  --line-2: #c7cfc8;
+  --accent: #1c5cab;
+  --accent-ink: #ffffff;
+  --accent-soft: #e9f1fb;
+  --caveat-bg: #fdf1d8;
+  --caveat-ink: #6e4700;
+  --why-bg: #e1f1e6;
+  --why-ink: #1c5732;
+  --nonhome: #e4e8e3;
+  --land: #eef1ed;
+  --gap: #ffffff;
+  --q1: #86b6ef;
+  --q2: #5598e7;
+  --q3: #2a78d6;
+  --q4: #1c5cab;
+  --q5: #104281;
+  --pin: #111a15;
+  --pin-ink: #ffffff;
+  --spot: #d24a1f;
+  --shadow: 0 1px 2px rgba(17, 26, 21, .05), 0 6px 20px rgba(17, 26, 21, .06);
+  --display: "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif;
+  --sans: "Public Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0f1311;
+    --surface: #171c19;
+    --surface-2: #1c221e;
+    --ink: #eef2ee;
+    --ink-2: #b7c1ba;
+    --muted: #8b968f;
+    --line: #29312c;
+    --line-2: #39433d;
+    --accent: #86b6ef;
+    --accent-ink: #0b1a2e;
+    --accent-soft: #1a2736;
+    --caveat-bg: #3a2c10;
+    --caveat-ink: #f3c76b;
+    --why-bg: #16301f;
+    --why-ink: #93d9aa;
+    --nonhome: #232a25;
+    --land: #1b211d;
+    --gap: #171c19;
+    --q1: #184f95;
+    --q2: #256abf;
+    --q3: #3987e5;
+    --q4: #6da7ec;
+    --q5: #9ec5f4;
+    --pin: #eef2ee;
+    --pin-ink: #111a15;
+    --spot: #f0784c;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 20px rgba(0, 0, 0, .25);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0f1311;
+  --surface: #171c19;
+  --surface-2: #1c221e;
+  --ink: #eef2ee;
+  --ink-2: #b7c1ba;
+  --muted: #8b968f;
+  --line: #29312c;
+  --line-2: #39433d;
+  --accent: #86b6ef;
+  --accent-ink: #0b1a2e;
+  --accent-soft: #1a2736;
+  --caveat-bg: #3a2c10;
+  --caveat-ink: #f3c76b;
+  --why-bg: #16301f;
+  --why-ink: #93d9aa;
+  --nonhome: #232a25;
+  --land: #1b211d;
+  --gap: #171c19;
+  --q1: #184f95;
+  --q2: #256abf;
+  --q3: #3987e5;
+  --q4: #6da7ec;
+  --q5: #9ec5f4;
+  --pin: #eef2ee;
+  --pin-ink: #111a15;
+  --spot: #f0784c;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 20px rgba(0, 0, 0, .25);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+a { color: var(--accent); }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.nowrap { white-space: nowrap; }
+
+.page {
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: 20px;
+  padding-block: 32px 64px;
+  display: grid;
+  gap: 32px;
+}
+@media (max-width: 560px) { .page { padding-inline: 16px; padding-block: 22px 48px; gap: 26px; } }
+.page.booting > :not(.masthead):not(.boot) { display: none; }
+.boot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; color: var(--ink-2); }
+.boot[hidden] { display: none; }
+.boot .bar { flex: 1 1 200px; max-width: 320px; height: 6px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.boot .bar i { display: block; height: 100%; width: 35%; border-radius: 99px; background: var(--accent); animation: slide 1.1s ease-in-out infinite; }
+@keyframes slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(290%); } }
+@media (prefers-reduced-motion: reduce) { .boot .bar i { animation: none; width: 60%; } }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.h2 { font-family: var(--display); font-weight: 600; font-size: 28px; line-height: 1.1; }
+
+/* masthead + scope */
+.masthead { display: grid; gap: 8px; }
+.masthead h1 { font-family: var(--display); font-weight: 700; font-size: clamp(36px, 5.4vw, 56px); line-height: 1; letter-spacing: -.01em; }
+.lede { color: var(--ink-2); font-size: 16px; max-width: 66ch; }
+.scope { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; justify-self: start; max-width: 100%; }
+.scope button { border: 0; background: none; padding: 8px 13px; border-radius: 9px; font-weight: 600; font-size: 14px; color: var(--ink-2); white-space: nowrap; }
+.scope button:hover { background: var(--surface-2); color: var(--ink); }
+.scope button[aria-selected="true"] { background: var(--ink); color: var(--surface); }
+@media (max-width: 420px) { .scope { gap: 2px; } .scope button { padding: 7px 9px; font-size: 13.5px; } }
+.top { display: grid; gap: 14px; }
+
+/* leaders */
+.leaders { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+@media (max-width: 880px) { .leaders { grid-template-columns: minmax(0, 1fr); } }
+.winner { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); padding: 24px; display: grid; gap: 14px; }
+@media (max-width: 560px) { .winner { padding: 18px; } }
+.winner h2 { font-family: var(--display); font-weight: 600; font-size: clamp(30px, 3.8vw, 40px); line-height: 1.02; }
+.winner h2 small { font-family: var(--sans); font-size: 15px; font-weight: 500; color: var(--muted); margin-left: 8px; letter-spacing: 0; }
+.hero-num { font-size: clamp(34px, 4.6vw, 48px); font-weight: 700; letter-spacing: -.02em; line-height: 1; }
+.hero-num span { font-size: 14px; font-weight: 500; letter-spacing: 0; color: var(--muted); margin-left: 8px; }
+.facts { margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px 16px; padding-block: 12px; border-block: 1px solid var(--line); }
+@media (max-width: 520px) { .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.facts div { display: grid; gap: 2px; }
+.facts dt { font-size: 12px; color: var(--muted); }
+.facts dd { margin: 0; font-weight: 600; }
+.caveats { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.caveats li { font-size: 14px; color: var(--ink-2); padding: 10px 12px; border-radius: 10px; background: var(--caveat-bg); }
+.caveats li b { color: var(--caveat-ink); font-weight: 700; margin-right: 4px; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: var(--accent-ink); text-decoration: none; font-weight: 600; padding: 10px 15px; border-radius: 10px; border: 0; font-size: 14.5px; }
+.btn:hover { filter: brightness(1.08); }
+.btn-2 { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); color: var(--ink); text-decoration: none; font-weight: 600; padding: 9px 13px; border-radius: 10px; border: 1px solid var(--line-2); font-size: 14px; }
+.btn-2:hover { border-color: var(--ink-2); }
+.btn-sm { padding: 7px 11px; font-size: 13.5px; border-radius: 9px; }
+
+.runners { display: grid; gap: 8px; padding-top: 4px; }
+.runners-head { display: flex; justify-content: space-between; gap: 12px; }
+.runners ol { list-style: none; margin: 0; padding: 0; }
+.runners li { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 2px 10px; align-items: baseline; padding-block: 11px; border-top: 1px solid var(--line); }
+.runners li:last-child { border-bottom: 1px solid var(--line); }
+.rk { font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+.linkish { padding: 0; border: 0; background: none; text-align: left; font-weight: 600; color: var(--ink); }
+.linkish:hover { color: var(--accent); text-decoration: underline; }
+.sub { display: block; font-size: 13px; color: var(--muted); }
+.runners .v { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.runners .v span { display: block; font-size: 12.5px; font-weight: 500; color: var(--muted); }
+.note { font-size: 14px; color: var(--ink-2); }
+
+.badges { display: inline-flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
+.badge { font-size: 11.5px; font-weight: 600; letter-spacing: .01em; padding: 2px 7px; border-radius: 999px; background: var(--caveat-bg); color: var(--caveat-ink); white-space: nowrap; }
+.badge.est { background: var(--accent-soft); color: var(--accent); }
+.badge.lm { background: var(--ink); color: var(--surface); }
+.badge.why { background: var(--why-bg); color: var(--why-ink); }
+.badge.why.muted { background: transparent; color: var(--muted); box-shadow: inset 0 0 0 1px var(--line-2); }
+.why-box { margin: 10px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); font-size: 14px; line-height: 1.45; color: var(--ink-2); }
+.why-box p { margin: 0; }
+.why-box .why-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 4px; }
+.why-box .why-head b { color: var(--ink); margin-right: 2px; }
+.landmark { display: grid; gap: 4px; padding: 12px 14px; border: 1px solid var(--line-2); border-radius: 12px; background: var(--surface-2); }
+.landmark p { font-size: 14px; color: var(--ink-2); }
+.landmark .eyebrow { font-size: 11.5px; }
+.lm-src { font-size: 12.5px !important; }
+
+/* stats */
+.stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px 22px; padding-block: 14px; border-block: 1px solid var(--line); }
+@media (max-width: 800px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.stats div { display: grid; gap: 2px; }
+.stats strong { font-size: 21px; font-weight: 700; line-height: 1.2; }
+.stats span { font-size: 13px; color: var(--muted); }
+
+/* records */
+.records { display: grid; gap: 14px; }
+.rec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+.rec { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: grid; gap: 6px; align-content: start; }
+.rec .fig { font-size: 26px; font-weight: 700; line-height: 1.1; letter-spacing: -.01em; }
+.rec .who { font-weight: 600; }
+.rec .ctx { font-size: 13px; color: var(--muted); }
+.rec .actions { margin-top: 6px; }
+
+/* explorer */
+.explorer { display: grid; gap: 14px; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 12px; align-items: center; }
+.search { position: relative; flex: 1 1 240px; max-width: 340px; }
+.search input { width: 100%; padding: 10px 12px 10px 36px; border: 1px solid var(--line-2); border-radius: 10px; background: var(--surface); }
+.search svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; stroke: var(--muted); fill: none; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { padding: 7px 12px; font-size: 13.5px; font-weight: 500; border-radius: 999px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink-2); }
+.chips button:hover { border-color: var(--ink-2); }
+.chips button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.sel-ctl { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--muted); }
+.sel-ctl select { padding: 8px 10px; border: 1px solid var(--line-2); border-radius: 10px; background: var(--surface); color: var(--ink); }
+.near-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.near-ctl button[aria-pressed="true"] { background: var(--spot); border-color: var(--spot); color: #fff; }
+
+.explorer-body { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 940px) { .explorer-body { grid-template-columns: minmax(0, 1fr); } }
+.map-panel { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 14px; display: grid; gap: 10px; scroll-margin-top: 12px; }
+@media (min-width: 941px) and (min-height: 840px) { .map-panel { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); } }
+@media (max-width: 560px) { .map-panel { padding: 10px; } }
+.map-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.seg { display: inline-flex; padding: 3px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); }
+.seg button { border: 0; background: none; padding: 6px 12px; border-radius: 8px; font-weight: 600; font-size: 13.5px; color: var(--ink-2); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+.legend { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; font-size: 12.5px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.s1 { background: var(--q1); } .s2 { background: var(--q2); } .s3 { background: var(--q3); } .s4 { background: var(--q4); } .s5 { background: var(--q5); }
+.s0 { background: var(--nonhome); box-shadow: inset 0 0 0 1px var(--line-2); }
+
+.map-wrap { position: relative; overflow: hidden; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); aspect-ratio: 1 / 1; max-height: 72vh; touch-action: none; user-select: none; -webkit-user-select: none; }
+.map-wrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+#map { cursor: grab; }
+#map.dragging { cursor: grabbing; }
+.map-wrap.picking #map { cursor: crosshair; }
+.overlay { position: absolute; inset: 0; pointer-events: none; }
+.pin { position: absolute; width: 22px; height: 22px; margin: 0; padding: 0; border-radius: 50%; border: 2px solid var(--surface); background: var(--pin); color: var(--pin-ink); font-size: 11px; font-weight: 700; line-height: 18px; text-align: center; font-variant-numeric: tabular-nums; transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--dy, 0px))); pointer-events: auto; }
+.pin.p1 { width: 28px; height: 28px; font-size: 13px; line-height: 24px; }
+.pin:hover { background: var(--accent); color: var(--accent-ink); }
+.ring { position: absolute; width: 40px; height: 40px; border-radius: 50%; border: 2.5px solid var(--ink); box-shadow: 0 0 0 2px var(--surface), inset 0 0 0 2px var(--surface); transform: translate(-50%, -50%); }
+.spot { position: absolute; transform: translate(-50%, -50%); display: grid; place-items: center; }
+.spot i { width: 14px; height: 14px; border-radius: 50%; background: var(--spot); box-shadow: 0 0 0 3px var(--surface), 0 0 0 5px var(--spot); }
+.spot b { position: absolute; top: 14px; font-size: 11px; font-weight: 700; color: var(--spot); background: var(--surface); padding: 0 4px; border-radius: 4px; white-space: nowrap; }
+.tlabel { position: absolute; transform: translate(-50%, -50%); font-family: var(--display); font-weight: 700; font-size: 14px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); text-shadow: 0 0 3px var(--surface), 0 0 6px var(--surface), 0 0 9px var(--surface); white-space: nowrap; }
+.tip { position: absolute; z-index: 5; pointer-events: none; background: var(--ink); color: var(--surface); padding: 7px 10px; border-radius: 8px; font-size: 12.5px; line-height: 1.35; white-space: nowrap; box-shadow: var(--shadow); }
+.tip strong { display: block; font-size: 15px; }
+.tip span { display: block; }
+.zoom { position: absolute; right: 10px; top: 10px; display: grid; gap: 4px; z-index: 4; }
+.zoom[hidden] { display: none; }
+.zoom button { width: 34px; height: 34px; border-radius: 9px; border: 1px solid var(--line-2); background: var(--surface); font-size: 18px; font-weight: 600; line-height: 1; display: grid; place-items: center; box-shadow: var(--shadow); }
+.map-hint { position: absolute; left: 10px; bottom: 10px; z-index: 4; font-size: 12.5px; font-weight: 600; background: var(--ink); color: var(--surface); padding: 6px 10px; border-radius: 8px; }
+.lod-note { position: absolute; left: 10px; top: 10px; z-index: 3; font-size: 12px; color: var(--ink-2); background: var(--surface); border: 1px solid var(--line); padding: 4px 8px; border-radius: 8px; pointer-events: none; max-width: calc(100% - 20px); }
+.lod-note[hidden] { display: none; }
+@media (max-width: 560px) { .lod-long { display: none; } }
+#sky3d { position: absolute; inset: 0; z-index: 3; background: var(--surface-2); }
+.deck-note { position: absolute; left: 10px; bottom: 10px; z-index: 4; font-size: 12px; color: var(--ink-2); background: var(--surface); border: 1px solid var(--line); padding: 5px 9px; border-radius: 8px; max-width: calc(100% - 20px); }
+.fitres { position: absolute; left: 10px; top: 10px; z-index: 4; }
+
+.selected { display: grid; gap: 8px; padding-top: 10px; border-top: 1px solid var(--line); }
+.sel-main { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 2px 10px; align-items: baseline; }
+.sel-addr { font-family: var(--display); font-size: 21px; font-weight: 600; line-height: 1.15; }
+.sel-addr small { font-family: var(--sans); font-size: 13px; font-weight: 500; color: var(--muted); margin-left: 6px; }
+.sel-v { font-size: 18px; font-weight: 700; text-align: right; white-space: nowrap; }
+.sel-sub { grid-column: 2 / -1; font-size: 13px; color: var(--muted); }
+.sel-detail { font-size: 12.5px; color: var(--ink-2); }
+
+/* list */
+.list-panel { display: grid; gap: 10px; }
+.list-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 12px; font-size: 13px; color: var(--muted); }
+.rows { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.row { display: grid; grid-template-columns: 58px minmax(0, 1fr) auto; grid-template-areas: "rk addr v"; gap: 4px 12px; align-items: center; padding: 10px 14px; border-top: 1px solid var(--line); }
+.row:first-child { border-top: 0; }
+.row.is-sel { background: var(--accent-soft); }
+.row .rk { grid-area: rk; font-size: 14px; }
+.row .addr { grid-area: addr; min-width: 0; }
+.row .addr .linkish { display: block; overflow-wrap: anywhere; }
+.row .v { grid-area: v; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.row .v small { display: block; margin-left: auto; max-width: 15em; white-space: normal; text-wrap: balance; font-size: 12px; font-weight: 500; color: var(--muted); }
+.meta { display: block; font-size: 12.5px; color: var(--muted); }
+@media (max-width: 560px) {
+  .row { grid-template-columns: 54px minmax(0, 1fr) auto; padding: 10px 12px; gap: 4px 10px; }
+  .row .rk { font-size: 13px; }
+}
+.rows .empty { padding: 26px 16px; text-align: center; color: var(--muted); }
+.more { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+
+/* my home */
+.myhome { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; display: grid; gap: 12px; }
+.myhome.empty { background: var(--surface-2); }
+.mh-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 14px; }
+.mh-head h2 { font-family: var(--display); font-weight: 600; font-size: 26px; line-height: 1.1; }
+.mh-head h2 small { font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--muted); margin-left: 6px; }
+.mh-val { font-size: 24px; font-weight: 700; }
+.mh-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px 18px; padding-block: 10px; border-block: 1px solid var(--line); }
+@media (max-width: 760px) { .mh-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.mh-stats div { display: grid; gap: 1px; }
+.mh-stats strong { font-size: 18px; }
+.mh-stats span { font-size: 12.5px; color: var(--muted); }
+.mh-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px 24px; }
+@media (max-width: 760px) { .mh-cols { grid-template-columns: minmax(0, 1fr); } }
+.mh-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 14px; }
+.mh-list li { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.mh-list .k { color: var(--muted); font-size: 12.5px; }
+.mh-find { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.mh-find input { flex: 1 1 240px; max-width: 360px; padding: 10px 12px; border: 1px solid var(--line-2); border-radius: 10px; background: var(--surface); }
+.mh-sugg { display: flex; flex-wrap: wrap; gap: 6px; }
+/* collections */
+.colls { display: grid; gap: 12px; }
+.coll-body { display: grid; gap: 10px; }
+.coll-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 14px; }
+.coll-head p { color: var(--ink-2); font-size: 14.5px; max-width: 70ch; }
+.coll-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
+.coll-list li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 2px 8px; align-items: baseline; padding: 10px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.coll-list .stat { grid-column: 2 / 3; font-size: 12.5px; color: var(--muted); }
+.coll-pill { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: var(--ink); }
+.coll-pill button { border: 1px solid var(--line-2); background: var(--surface); border-radius: 999px; padding: 2px 9px; font-size: 12.5px; }
+.coll-pill[hidden] { display: none; }
+/* notes */
+.notes { display: grid; gap: 12px; max-width: 78ch; }
+.notes ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; color: var(--ink-2); }
+.notes ul ul { margin-top: 6px; gap: 5px; }
+.notes b { color: var(--ink); }
+.source { font-size: 13px; color: var(--muted); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .row, .pin, .btn, .btn-2, .chips button, .scope button { transition: background-color .15s, border-color .15s, color .15s; }
+}
+</style>
+</head>
+<body>
+<main class="page booting" id="page">
+  <header class="masthead">
+    <p class="eyebrow">Andover · Beverly · Boxford · Georgetown · Gloucester · Ipswich · Lynn · Lynnfield · Marblehead · Middleton · Newburyport · North Andover · Salem · Swampscott · Topsfield · FY2025–27 assessments</p>
+    <h1>Essex County Home Atlas</h1>
+    <p class="lede">Every house in fifteen Essex County towns, ranked by value, with the assessor's blind spots corrected and every pin on the actual house.</p>
+  </header>
+
+  <div class="boot" id="boot" role="status" aria-live="polite">
+    <span id="boot-msg">Loading about 113,000 homes…</span>
+    <span class="bar" aria-hidden="true"><i></i></span>
+  </div>
+
+  <section class="myhome" id="myhome" aria-label="My home"></section>
+
+  <div class="top">
+    <nav class="scope" id="scope" role="tablist" aria-label="Town"></nav>
+    <section class="leaders" id="leaders" aria-live="polite"></section>
+  </div>
+
+  <section class="stats" id="stats" aria-label="Summary"></section>
+
+  <section class="records" aria-labelledby="rec-h">
+    <h2 class="h2" id="rec-h">Records</h2>
+    <div class="rec-grid" id="records"></div>
+  </section>
+
+  <section class="colls" aria-labelledby="coll-h">
+    <h2 class="h2" id="coll-h">Collections</h2>
+    <div class="chips" id="coll-chips" role="group" aria-label="Collections"></div>
+    <div class="coll-body" id="coll-body"></div>
+  </section>
+
+
+  <section class="explorer" id="explorer" aria-labelledby="explore-h">
+    <h2 class="h2" id="explore-h">Explore every home</h2>
+    <div class="controls">
+      <label class="search">
+        <span class="sr-only">Search addresses</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke-width="2"></circle><path d="M20 20l-3.5-3.5" stroke-width="2" stroke-linecap="round"></path></svg>
+        <input id="q" type="search" placeholder="Search an address or street" autocomplete="off">
+      </label>
+      <div class="chips" id="chips" role="group" aria-label="Filter homes">
+        <button type="button" data-t="" aria-pressed="true">All</button>
+        <button type="button" data-t="S" aria-pressed="false">Single-family</button>
+        <button type="button" data-t="C" aria-pressed="false">Condos</button>
+        <button type="button" data-t="MF" aria-pressed="false">Multi-family</button>
+        <button type="button" data-t="F" aria-pressed="false">On open land</button>
+        <button type="button" data-t="!" aria-pressed="false">Has a caveat</button>
+      </div>
+      <label class="sel-ctl">Sort by
+        <select id="sort">
+          <option value="value">Value (corrected)</option>
+          <option value="assessed">Assessed value</option>
+          <option value="house">House value (no land)</option>
+          <option value="sqft">Living area</option>
+          <option value="acres">Lot size</option>
+          <option value="oldest">Oldest</option>
+          <option value="newest">Newest</option>
+        </select>
+      </label>
+      <div class="near-ctl">
+        <button type="button" class="btn-2 btn-sm" id="near" aria-pressed="false">Near my spot</button>
+        <label class="sel-ctl"><span class="sr-only">Radius</span>
+          <select id="radius-sel">
+            <option value="0.5">within ½ mile</option>
+            <option value="1" selected>within 1 mile</option>
+            <option value="2">within 2 miles</option>
+            <option value="5">within 5 miles</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div class="explorer-body">
+      <div class="map-panel" id="map-panel">
+        <div class="map-toolbar">
+          <div class="seg" role="group" aria-label="Map view">
+            <button type="button" id="v2d" aria-pressed="true">Map</button>
+            <button type="button" id="v3d" aria-pressed="false">3D skyline</button>
+          </div>
+          <button type="button" class="btn-2 btn-sm" id="setspot">Set my spot</button>
+        </div>
+        <div class="legend" aria-label="Map key">
+          <span><i class="s1"></i>Under $750K</span>
+          <span><i class="s2"></i>$750K–1M</span>
+          <span><i class="s3"></i>$1–1.5M</span>
+          <span><i class="s4"></i>$1.5–2M</span>
+          <span><i class="s5"></i>$2M+</span>
+          <span><i class="s0"></i>Not a home</span>
+        </div>
+        <div class="map-wrap" id="map-wrap">
+          <canvas id="base" aria-hidden="true"></canvas>
+          <canvas id="map" role="img" aria-label="Map of Andover, Beverly, Boxford, Georgetown, Gloucester, Ipswich, Lynn, Lynnfield, Marblehead, Middleton, Newburyport, North Andover, Salem, Swampscott, and Topsfield with every home shaded by value"></canvas>
+          <div class="overlay" id="overlay"></div>
+          <div class="zoom" id="zoom">
+            <button type="button" id="zin" aria-label="Zoom in">+</button>
+            <button type="button" id="zout" aria-label="Zoom out">−</button>
+            <button type="button" id="zfit" aria-label="Show the whole area">⤢</button>
+          </div>
+          <button type="button" class="btn-2 btn-sm fitres" id="fitres" hidden>Zoom to results</button>
+          <div class="map-hint" id="hint" hidden>Tap the map where you live</div>
+          <div class="lod-note" id="lod-note" hidden><span class="lod-long">Each square is a home. </span>Zoom in for lot lines.</div>
+          <div class="tip" id="tip" hidden></div>
+          <div id="sky3d" hidden></div>
+          <div class="deck-note" id="deck-note" hidden></div>
+        </div>
+        <div class="selected" id="selected" aria-live="polite"></div>
+      </div>
+
+      <div class="list-panel">
+        <div class="list-meta"><span id="count"></span><span class="coll-pill" id="coll-pill" hidden></span><span id="rank-note"></span></div>
+        <ol class="rows" id="rows"></ol>
+        <div class="more" id="more-wrap">
+          <button type="button" class="btn-2" id="more">Show 50 more</button>
+          <button type="button" class="btn-2" id="all">Show all</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="notes" aria-labelledby="notes-h">
+    <h2 class="h2" id="notes-h">Traps this atlas corrects</h2>
+    <ul>
+      <li><b>Apartment blocks coded as homes.</b> Some cities code big apartment buildings with ground-floor shops as “mixed use, primarily residential,” the same class as a house with a home business. Lynn has about a hundred of them, including a 10-story, $100 million tower that would otherwise rank as the region's most valuable “home.” Mixed-use records that are apartment or commercial buildings (by building style, or 8,000+ sq ft) are left out, along with office and retail condos and condo records that cover a whole building. So are apartment blocks that Salem and Gloucester code as “multiple houses,” and a 12-acre parcel on Nonantum Road in Marblehead with more than 30 buildings on it, recorded as a single $27.6 million “home.”</li>
+      <li><b>Farm, forest, and recreation land.</b> Land in the state's Chapter 61, 61A, and 61B programs is assessed at its use value, far below market. For houses on 5+ acres of it, the land is re-valued like similar-size lots in the same town, tagged “Land corrected.”</li>
+      <li><b>Protected land.</b> If a permanent conservation or agricultural preservation restriction covers at least a quarter of a lot (from the state's protected open space map), the land can't be developed and its low value is real. Those lots are never re-valued. This is why 68 River Rd in Topsfield and Arden in Andover aren't inflated.</li>
+      <li><b>Valued by sale.</b> When a property's assessment is known to be off (farm, forest, or protected land, estates, big houses assessed low) and it sold within about ten years of its town's valuation date, the sale is adjusted to that date (January 1, 2025 for most towns) using the town's own sales: each year's sales are compared with the same homes' current assessments. If that says it's worth more, the sale-based value is used. Older sales are shown for context only: houses and markets change too much in a decade, and a conservation restriction is often granted after the purchase. Bulk transfers aren't counted as sales: in August 2012, 64 Little Neck cottages in Ipswich changed hands on one day for about $180,000 each, as the owners bought their land shares in a condo conversion, not the homes at market price.</li>
+      <li><b>Recent sales the assessor hasn't caught up with.</b> A home that sold in the year before its town's valuation date or since (2024 or later for most towns) for at least 15% more than its assessment, after that same market adjustment, is valued by its sale. Renovations and one-of-a-kind houses are the usual reason. The biggest case is 24 Phillips St in Andover, which sold for $8.5 million in July 2025 against a $6.39 million assessment.</li>
+      <li><b>Estates split across parcels.</b> Parcels sold together on one deed are grouped as an estate, with a combined size and value. Packages that include apartment or commercial buildings, a builder's subdivision lots, or a landlord's several houses aren't estates, so they're left ungrouped.</li>
+      <li><b>Unfinished new builds.</b> Houses built in the year before their town's valuation date or since (2024 or later for most towns) and valued at less than half the town's per-square-foot norm for recent builds were probably assessed before they were finished. They're valued as finished at that norm (the land plus the living area at the norm), marked ≈.</li>
+      <li><b>Sizes that don't add up.</b> Every house's recorded living area is checked against three independent clues: the assessor's own gross building area (living space plus basement, garage, and porches), scaled by what's typical for that kind of house in that town; the building's outline on aerial photos times its stories; and what the house value works out to at typical prices for similar homes. Beverly, Marblehead, and Salem record no separate gross area, so there the outline and the value have to agree on their own.
+        <ul>
+          <li><b>Size corrected:</b> when every clue says the record is far off, the house gets the middle estimate, marked ≈, and stays in every ranking at that size. The bar is lower when the record contradicts itself, like a living area bigger than the whole building's gross area. The biggest fix is 6 Lils Way in Lynnfield: 17,218 sq ft recorded, about 5,760 by the clues.</li>
+          <li><b>Size looks understated:</b> the outline and the value both say bigger, but the clues don't agree closely enough to pin down a number, so the recorded size stays and the home is flagged.</li>
+          <li><b>Value low for size:</b> the house itself is valued under 40% of similar homes per square foot. Usually condition, a deed restriction, an unusual use, or a data error. If it sold within about ten years for more, adjusted to its town's valuation date, the sale is used instead.</li>
+          <li><b>Value high for size:</b> at least 2.5 times similar homes per square foot, when the outline doesn't confirm the recorded size, or other big buildings on the lot could explain it.</li>
+        </ul>
+        The outlines come from the state's building layer, traced mostly from 2011 aerial photos with newer buildings added from later flights, so an addition built since then can make an outline look small. The “Size doesn't add up” collection lists every corrected and flagged home.</li>
+      <li><b>Gross area filed as living area.</b> Salem's assessor puts each house's gross area (basement, attic, and porches included) in the living-area field: about 460 sq ft per room, against about 300 in the other towns. Salem sizes here are estimated living areas, marked ≈: the gross area times the share that's usually living space for the same kind of house (stories, age, one or several units) in the towns that record both, about 59% on average. 29 Chestnut St, for one, is recorded at 17,297 sq ft gross, about 10,990 of it living space.</li>
+      <li><b>Why tags.</b> Every home worth $1 million or more gets a tag naming the biggest reason for its value. The value is split into land (what a lot that size usually carries in town, and anything above that for location) and house (what a house that size usually carries, and anything above that for build quality), each against what's typical in that town. <i>Waterfront</i> means the lot touches the ocean, a harbor, a tidal flat, a river, or a lake or pond of 5+ acres on the state's water maps, with no road in between; <i>Near the ocean</i> means within about 800 feet of it. A second tag shows when another reason is at least half as big, or when a lot on or near the water has a land premium. <i>Typical for town</i> means nothing stands out: that's what homes cost there.</li>
+      <li><b>Land purchases.</b> A “last sale” from before the house was built was a land purchase, and it's labeled that way instead of as the home's price.</li>
+      <li><b>Town-line houses.</b> <span id="note-line">Some houses straddle a town line</span>, so part of their value may be taxed by the neighboring town. They're flagged.</li>
+      <li><b>Pins on the actual house.</b> Each home is matched to its building in the state's building outlines, choosing the one that fits the house's size, not a barn or riding arena. When a lot line cuts through the house (parcel maps and outlines don't always line up), the pin still goes on the house.</li>
+      <li><b>Cross-town comparisons.</b> <span id="note-cross">Each town's assessor tracks the market a little differently.</span> Treat cross-town gaps under about 10% as ties.</li>
+      <li><b>Other things to know:</b> values are each town's latest assessment in the state's parcel data: fiscal 2026 (market value as of January 1, 2025) for most towns, fiscal 2025 (January 1, 2024) for Marblehead, and fiscal 2027 (January 1, 2026) for Beverly and Swampscott. Prices have been rising about 3–6% a year, so Marblehead runs a little low next to the rest, and Beverly and Swampscott a little high. Condo values are per unit. For lots with several houses, the value and the living area cover all of them. Two- and three-family houses are included; apartment buildings of four or more units aren't. Homes owned by churches, schools, or nonprofits aren't included.</li>
+    </ul>
+    <p class="source">Sources: MassGIS Property Tax Parcels (FY2025–27 assessor data for all fifteen towns), MassGIS Building Structures (outlines traced from 2011–2025 aerial photos), MassDOT Roads, MassGIS Protected and Recreational Open Space, and MassDEP 1:25,000 Hydrography, retrieved September 24 to October 4, 2026. Landmark notes cite their own sources.</p>
+  </section>
+</main>
+<script>
+(() => {
+  "use strict";
+  // ---------------- constants ----------------
+  const TW = 0, AD = 1, TY = 2, AS = 3, VA = 4, BL = 5, LA = 6, OT = 7, SF = 8, AC = 9, YB = 10, ST = 11,
+        SY = 12, SP = 13, PI = 14, UC = 15, PID = 16, FL = 17, ES = 18, X = 19, Y = 20, LAT = 21, LON = 22,
+        REG = 23, TR = 24, ALT = 25, EXL = 26, FP = 27, SIMP = 28, CRP = 29, CRN = 30, LINE = 31, LM = 32, SB = 33, SZ = 34, OY = 35, WY = 36, GR = 37;
+  const F_LAND = 1, F_EST = 2, F_MULTI = 4, F_CONDO = 8, F_NEW = 16, F_PIN = 32, F_LOW = 64, F_CR = 128, F_SALE = 256,
+        F_LINE = 512, F_SIMP = 1024, F_NOPARCEL = 2048, F_SIZEBIG = 4096, F_SIZESML = 8192, F_HIGHV = 16384,
+        F_SIZEFIX = 32768, F_VALEST = 65536, F_GROSS = 131072;      // F_GROSS: living area estimated from a gross-area record (Salem)
+  const CAVEAT = F_LAND | F_EST | F_NEW | F_LOW | F_PIN | F_CR | F_SALE | F_LINE | F_SIZEBIG | F_SIZESML | F_HIGHV | F_SIZEFIX | F_VALEST;
+  const NUMW = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve",
+                "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"];
+  const nTowns = () => NUMW[TOWNS.length] || String(TOWNS.length);
+  const TYPE = { S: "Single-family", C: "Condo", H: "Mobile home", "2": "Two-family", "3": "Three-family",
+                 M: "Multiple houses", B: "House + business", F: "House + open land", O: "House + other use" };
+  const GROUP = { S: "S", C: "C", "2": "MF", "3": "MF", M: "MF", F: "F", B: "X", H: "X", O: "X" };
+  const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const MILE = 1609.344;
+  const PARCEL_MPP = 16;                // at or below this many meters per pixel, lot lines are drawn
+  const PCELL = 400, HCELL = 300;       // grid cell sizes (m) for parcels and homes
+  const CAP3D = 15000;
+  const DATA_V = "9";
+  const BINS = [750000, 1000000, 1500000, 2000000];
+  const binOf = v => 1 + (v >= BINS[0]) + (v >= BINS[1]) + (v >= BINS[2]) + (v >= BINS[3]);
+  const OLD = { ax: 0.0002126579, bx: -71.10863271, ay: -0.0001569802, by: 42.73700927 };   // v1 map units -> lon/lat
+
+  // ---------------- formatting ----------------
+  const money = n => "$" + Math.round(n).toLocaleString("en-US");
+  const short = n => n >= 1e6 ? "$" + String(+(n / 1e6).toFixed(n >= 1e7 ? 1 : 2)) + "M" : "$" + Math.round(n / 1000) + "K";
+  const acresTxt = a => a > 0 ? (a < 10 ? String(+a.toFixed(2)) : a.toFixed(1)) : "";
+  const isEst = h => (h[FL] & (F_LAND | F_SALE | F_VALEST)) > 0;
+  const valTxt = h => isEst(h) ? "≈" + short(h[VA]) : money(h[VA]);
+  const psf = h => h[SF] > 0 ? h[BL] / h[SF] : 0;
+  const sfTxt = h => ((h[FL] & (F_SIZEFIX | F_GROSS)) ? "≈" : "") + h[SF].toLocaleString("en-US") + " sq ft";     // ≈ = corrected or estimated size
+  const valYear = t => D.towns[t].fy - 1;                                   // each town's valuation date is January 1 of this year
+  const priceTxt = t => "January " + valYear(t) + " prices";
+  const monthTxt = ym => { const [y, m] = ym.split("-"); return MONTHS[+m - 1] + " " + y; };
+  const monShort = ym => monthTxt(ym).replace(/^(\w{3})\w*/, "$1");
+  const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+  const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+                  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+
+  // ---------------- data ----------------
+  let D = null, H = [], TOWNS = [], LI = null, TH = [], BIN = null, HALF = null, MATCH = null, BYBIN = null, XA = null, YA = null, TWA = null;
+  let HG = null, hay = null, dimActive = false, statsAll = null;
+  const TD = [], FPS = [];
+  const dataURL = name => name + "?v=" + DATA_V;
+
+  async function loadZ(name) {
+    let r = await fetch(dataURL(name));
+    if (!r.ok) r = await fetch(name);
+    if (!r.ok) throw new Error(name + " " + r.status);
+    const j = await r.json();
+    const s = atob(j.z), n = s.length, u = new Uint8Array(n);
+    for (let i = 0; i < n; i++) u[i] = s.charCodeAt(i);
+    const stream = new Blob([u]).stream().pipeThrough(new DecompressionStream("gzip"));
+    return JSON.parse(await new Response(stream).text());
+  }
+  function norm(t) {
+    t = String(t).toLowerCase().replace(/[`']/g, "").replace(/½/g, " 1/2").replace(/-/g, "").replace(/#/g, " ").replace(/\./g, "");
+    return t.split(/\s+/).filter(Boolean).map(w => D.words[w] || w).join(" ");
+  }
+  function decode(S) {
+    const c = S.cols, sp = S.sparse, n = S.n, P = S.proj;
+    TOWNS = S.towns.map(t => t.name);
+    TH = TOWNS.map(() => []);
+    LI = new Int32Array(n); BIN = new Uint8Array(n); HALF = new Float32Array(n); MATCH = new Uint8Array(n);
+    XA = new Int32Array(n); YA = new Int32Array(n); TWA = new Uint8Array(n);
+    H = new Array(n);
+    for (let i = 0; i < n; i++) {
+      const tw = c.tw[i], as = c.as[i], bl = c.bl[i], la = c.la[i], fl = c.fl[i], syv = c.sy[i];
+      const num = c.an[i], suf = sp.sx[i];
+      const ad = (num ? num + " " : "") + S.streets[c.sn[i]] + (suf ? " " + suf : "");
+      const ym = syv ? Math.floor(syv / 12) + "-" + String(syv % 12 + 1).padStart(2, "0") : "";
+      const x = c.x[i], y = c.y[i];
+      const lon = P.lon0 + (x + P.minx) / P.mx, lat = P.lat0 + (P.maxy - y) / P.my;
+      let simp = 0;
+      if (fl & F_SIMP) { const r = S.ratio[tw][String(Math.floor(syv / 12))]; if (r) simp = Math.round(c.sp[i] / r); }
+      const cr = sp.cr[i], lmv = sp.lm[i];
+      LI[i] = TH[tw].length; TH[tw].push(i);
+      const va = as + c.dv[i];
+      H[i] = [tw, ad, c.ty[i], as, va, bl, la, as - bl - la, c.sf[i], c.ac[i], c.yb[i], S.styles[c.st[i]], ym, c.sp[i],
+              -2, S.ucodes[c.uc[i]], "", fl, c.es[i], x, y, +lat.toFixed(6), +lon.toFixed(6),
+              i + 1, TH[tw].length, sp.alt[i] || "", sp.exl[i] || 0, 0, simp, cr ? cr[0] : 0, cr ? cr[1] : "", sp.line[i] || "",
+              lmv != null ? lmv : -1, c.sb[i], sp.sz[i] || null, 0,
+              c.wy ? [c.wy.charCodeAt(2 * i) - 97, c.wy.charCodeAt(2 * i + 1) - 97] : null, sp.gr ? sp.gr[i] || 0 : 0];
+      BIN[i] = binOf(va); XA[i] = x; YA[i] = y; TWA[i] = tw;
+      const t = c.ty[i];
+      HALF[i] = t === "C" ? 5 : Math.min(160, Math.max(6, Math.sqrt(Math.max(c.ac[i], 0.04) * 4046.86) / 2));
+    }
+    BYBIN = [[], [], [], [], [], []];
+    for (let i = n - 1; i >= 0; i--) BYBIN[BIN[i]].push(i);
+    HG = new Map();
+    for (let i = 0; i < n; i++) {
+      const k = Math.floor(YA[i] / HCELL) * 1000 + Math.floor(XA[i] / HCELL);
+      let a = HG.get(k); if (!a) HG.set(k, a = []); a.push(i);
+    }
+  }
+  const buildHay = () => { hay = H.map(h => norm(h[AD] + " " + TOWNS[h[TW]]) + (h[ALT] ? " | " + h[ALT] : "")); };
+  const llOf = (x, y) => { const P = D.proj; return [P.lon0 + (x + P.minx) / P.mx, P.lat0 + (P.maxy - y) / P.my]; };
+  const xyOf = (lon, lat) => { const P = D.proj; return { x: Math.round((lon - P.lon0) * P.mx - P.minx), y: Math.round(P.maxy - (lat - P.lat0) * P.my) }; };
+
+  // lazily loaded per-town lot lines (plus each home's parcel id and roof footprint size)
+  function ensureTown(t) {
+    const rec = TD[t];
+    if (rec && rec.ready) return Promise.resolve(rec);
+    if (rec && rec.loading) return rec.loading;
+    if (rec && rec.failed && performance.now() - rec.failed < 15000) return Promise.reject(new Error("recent failure"));
+    const r = TD[t] = { ready: false };
+    r.loading = loadZ("p-" + D.towns[t].slug + ".json").then(obj => {
+      buildTown(t, obj); r.loading = null; requestDraw(); townLoaded(t); return r;
+    }).catch(err => { r.loading = null; r.failed = performance.now(); throw err; });
+    return r.loading;
+  }
+  function simplifyRing(a, tol) {
+    const n = a.length / 2; if (n <= 4) return a;
+    const px = i => a[2 * (i % n)], py = i => a[2 * (i % n) + 1], t2 = tol * tol;
+    const keep = new Uint8Array(n + 1); keep[0] = keep[n] = 1;
+    const stack = [0, n];
+    while (stack.length) {
+      const e = stack.pop(), s0 = stack.pop();
+      const x1 = px(s0), y1 = py(s0), dx = px(e) - x1, dy = py(e) - y1, L = dx * dx + dy * dy;
+      let md = 0, mi = -1;
+      for (let i = s0 + 1; i < e; i++) {
+        let ex = px(i) - x1, ey = py(i) - y1;
+        if (L > 0) { const u = Math.max(0, Math.min(1, (ex * dx + ey * dy) / L)); ex -= u * dx; ey -= u * dy; }
+        const d = ex * ex + ey * ey; if (d > md) { md = d; mi = i; }
+      }
+      if (md > t2 && mi > 0) { keep[mi] = 1; stack.push(s0, mi, mi, e); }
+    }
+    const out = []; for (let i = 0; i < n; i++) if (keep[i]) out.push(a[2 * i], a[2 * i + 1]);
+    return out.length >= 6 ? Int32Array.from(out) : a;
+  }
+  function buildTown(t, obj) {
+    const rec = TD[t], R = obj.r, n = R.length;
+    rec.rings = new Array(n); rec.coarse = new Array(n); rec.bb = new Int32Array(n * 4); rec.grid = new Map(); rec.stamp = new Uint32Array(n);
+    for (let p = 0; p < n; p++) {
+      const out = [];
+      let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+      for (const r of R[p]) {
+        const a = new Int32Array(r.length);
+        let x = r[0], y = r[1]; a[0] = x; a[1] = y;
+        for (let k = 2; k < r.length; k += 2) { x += r[k]; y += r[k + 1]; a[k] = x; a[k + 1] = y; }
+        for (let k = 0; k < a.length; k += 2) {
+          if (a[k] < x0) x0 = a[k]; if (a[k] > x1) x1 = a[k]; if (a[k + 1] < y0) y0 = a[k + 1]; if (a[k + 1] > y1) y1 = a[k + 1];
+        }
+        out.push(a);
+      }
+      rec.rings[p] = out;
+      rec.coarse[p] = out.map(r => simplifyRing(r, 1.8));
+      rec.bb[4 * p] = x0; rec.bb[4 * p + 1] = y0; rec.bb[4 * p + 2] = x1; rec.bb[4 * p + 3] = y1;
+      if (!out.length) continue;
+      for (let cy = Math.floor(y0 / PCELL); cy <= Math.floor(y1 / PCELL); cy++)
+        for (let cx = Math.floor(x0 / PCELL); cx <= Math.floor(x1 / PCELL); cx++) {
+          const k = cy * 1000 + cx; let a = rec.grid.get(k); if (!a) rec.grid.set(k, a = []); a.push(p);
+        }
+    }
+    const hs = TH[t]; rec.ph = new Array(n);
+    for (let k = 0; k < hs.length; k++) {
+      const g = hs[k], h = H[g];
+      h[PI] = obj.pi[k]; h[FP] = obj.fp[k]; h[PID] = obj.pid[k]; h[OY] = obj.oy ? obj.oy[k] : 0;
+      if (h[PI] >= 0) (rec.ph[h[PI]] || (rec.ph[h[PI]] = [])).push(g);
+    }
+    rec.ready = true;
+  }
+  function townLoaded(t) {
+    if (H[state.sel] && H[state.sel][TW] === t) renderSelected();
+    if (state.home >= 0 && H[state.home][TW] === t) renderMyHome();
+    if (pendingHome && pendingHome.t === t) resolvePendingHome();
+  }
+  function ensureFP(t) {
+    if (FPS[t]) return Promise.resolve(FPS[t]);
+    return loadZ("f-" + D.towns[t].slug + ".json").then(a => (FPS[t] = a));
+  }
+
+  // ---------------- why a $1M+ home is worth it ----------------
+  const MUTED_WHY = new Set(["Typical for town", "Sold high"]);
+  const whyTags = h => h[WY] ? h[WY].filter(Boolean).map(k => D.whyLabels[k]) : [];
+  function interpLog(x, xs, ys) {                       // numpy.interp on log(x), clamped at both ends
+    if (!xs || !xs.length) return 0;
+    const lx = Math.log(x);
+    if (lx <= Math.log(xs[0])) return ys[0];
+    for (let k = 1; k < xs.length; k++) {
+      const a = Math.log(xs[k - 1]), b = Math.log(xs[k]);
+      if (lx <= b) return ys[k - 1] + (ys[k] - ys[k - 1]) * (lx - a) / (b - a);
+    }
+    return ys[ys.length - 1];
+  }
+  function expLand(t, ac) {                             // typical land value for a lot this size in town
+    const w = D.towns[t].why, A = w.lac, V = w.llv, n = A.length;
+    if (ac <= A[0]) return V[0];
+    if (ac <= A[n - 1]) return interpLog(ac, A, V);
+    const k = Math.max(n - 3, 0), rate = (V[n - 1] - V[k]) / Math.max(A[n - 1] - A[k], 1e-9);
+    return V[n - 1] + Math.min(Math.max(rate, 0), 40000) * (ac - A[n - 1]);
+  }
+  const psfAt = (t, s) => interpLog(Math.max(s, 300), D.towns[t].why.ps, D.towns[t].why.pp);
+  function whySentence(h, lab) {
+    const t = h[TW], w = D.towns[t].why, town = TOWNS[t], n = v => Math.round(v).toLocaleString("en-US");
+    const times = x => (x < 10 ? x.toFixed(1) : x.toFixed(0)) + " times";
+    const land = (h[FL] & F_LAND) && h[EXL] ? h[EXL] : h[LA], ac = h[AC] > 0 ? h[AC] : w.a0;
+    const bldg = (h[FL] & F_VALEST) ? h[VA] - land - Math.max(h[OT], 0) : h[BL];
+    const where = lab === "Waterfront" ? ", and the lot is on the water." : lab === "Near the ocean" ? ", and it's within about 800 feet of the ocean." : ".";
+    if (h[TY] === "C") {
+      if (lab === "Big unit") return "At " + sfTxt(h) + ", it's about " + times(h[SF] / w.cs0) + " the size of a typical " + town + " condo (" + n(w.cs0) + " sq ft).";
+      if (!h[SF] || !w.cpsf) return "";
+      const p = h[AS] / h[SF];
+      return "The unit is valued at $" + n(p) + "/sq ft, about " + times(p / w.cpsf) + " the $" + n(w.cpsf) + " typical for condos in " + town +
+        (lab === "Waterfront" ? ", and the complex is on the water." : lab === "Near the ocean" ? ", and it's within about 800 feet of the ocean." : lab === "New build" ? " (newer construction)." : ".");
+    }
+    switch (lab) {
+      case "Waterfront": case "Near the ocean": case "Prime location": {
+        const e = expLand(t, ac);
+        return "The land alone is assessed at " + short(land) + ", about " + short(Math.max(land - e, 0)) + " more than a typical " + acresTxt(ac) + "-acre lot in " + town + where;
+      }
+      case "Acreage": return "It sits on " + acresTxt(ac) + " acres of land worth about " + short(land) + ", versus about " + short(w.l0) + " for a typical house lot in " + town + ".";
+      case "Big house": return h[SF] ? "At " + sfTxt(h) + ", it's about " + times(h[SF] / w.s0) + " the size of a typical " + town + " house (" + n(w.s0) + " sq ft)." : "";
+      case "New build": case "High-end build": case "Historic": {
+        if (!h[SF]) return "";
+        const p = bldg / h[SF], q = psfAt(t, h[SF]);
+        const head = lab === "New build" ? "Built " + h[YB] + ", the house is valued at $" : lab === "Historic" ? "Built " + h[YB] + ", the house is valued at $" : "The house is valued at $";
+        return head + n(p) + "/sq ft, about " + times(p / q) + " the $" + n(q) + " typical for a house its size in " + town +
+          (lab === "High-end build" ? ", which points to high-end construction or finishes." : ".");
+      }
+      case "Several houses": return "More than one house stands on the lot, valued together at " + short(h[BL]) + ".";
+      case "Extra buildings": return "Its " + short(h[BL]) + " building value includes other buildings on the lot, like a barn or a guest house.";
+      case "Typical for town": return "Nothing stands out for " + town + ": that's about what a home like it costs there. The median home in town is " + short(D.towns[t].median) + ".";
+      case "Sold high": return "Its lot and house look ordinary for " + town + " in the assessment; the value comes from what it sold for.";
+    }
+    return "";
+  }
+  function whyEl(h) {
+    const tags = whyTags(h); if (!tags.length) return null;
+    const box = el("div", "why-box"), head = el("p", "why-head");
+    head.append(el("b", null, "Why " + valTxt(h)));
+    tags.forEach(t => head.append(el("span", "badge why" + (MUTED_WHY.has(t) ? " muted" : ""), t)));
+    box.append(head, el("p", null, tags.map(t => whySentence(h, t)).filter(Boolean).join(" ")));
+    return box;
+  }
+
+  // ---------------- caveats ----------------
+  const saleYear = h => +h[SY].slice(0, 4);
+  function caveats(h) {
+    const out = [], town = TOWNS[h[TW]];
+    const e = h[ES] >= 0 ? D.estates[h[ES]] : null;
+    if (h[FL] & F_SALE) {
+      if (e && e[11] > 0) out.push(["Valued by its sale.", "The whole estate (" + e[4] + " parcels, " + e[5] + " acres) sold for " + money(e[9]) +
+        " in " + monthTxt(ymOf(e[8])) + ". Adjusted to " + priceTxt(h[TW]) + " using " + town + "'s own sales, that's about " + short(e[11]) +
+        ". This house's share, by acreage, is about " + short(h[VA]) + ", well above its assessed " + money(h[AS]) + ". One sale is still one data point, so treat it as an estimate."]);
+      else out.push(["Valued by its sale.", "Sold for " + money(h[SP]) + " in " + monthTxt(h[SY]) + ". Adjusted to " + priceTxt(h[TW]) + " using " + town +
+        "'s own sales, that's about " + short(h[SIMP] || h[VA]) + ", well above its assessed " + money(h[AS]) + "."]);
+    }
+    if (h[FL] & F_LAND) {
+      out.push(["Farm/forest-rate land.", acresTxt(h[AC]) + " acres assessed at " + money(h[LA]) +
+        ". Valued like similar-size lots in " + town + ", the land would be about " + short(h[EXL]) +
+        ", putting the property near " + short(h[AS] - h[LA] + h[EXL]) + " instead of the assessed " + money(h[AS]) + "." +
+        (h[AC] >= 20 ? " That's a rough estimate: properties this big rarely sell." : "")]);
+    }
+    if (h[FL] & F_CR) {
+      out.push(["Protected land.", h[CRP] + "% of the lot is under a permanent conservation restriction" + (h[CRN] ? " (" + h[CRN] + ")" : "") +
+        ", so it can't be developed. Its low land value is real, so the land isn't re-valued here."]);
+    }
+    if (e && !((h[FL] & F_SALE) && e[11] > 0)) {
+      out.push(["Part of an estate.", "Sold together with " + (e[4] - 1) + " other parcel" + (e[4] > 2 ? "s" : "") +
+        " on one deed" + (e[8] && e[9] > 1000 ? " in " + monthTxt(ymOf(e[8])) + " for " + money(e[9]) : "") + ": " +
+        e[5] + " acres" + (e[2].length > 1 ? " and " + e[2].length + " houses" : "") + " in all, " +
+        (e[7] > e[6] * 1.02 ? "worth about " + short(e[7]) : "assessed at " + short(e[6])) + " combined."]);
+    }
+    if (h[FL] & F_NEW) {
+      const t = D.towns[h[TW]];
+      out.push(["Probably unfinished when assessed.", "Built " + h[YB] + ", but the house is valued at $" + Math.round(psf(h)) +
+        "/sq ft" + (t.newPsf ? ", versus about $" + t.newPsf + " for other recent builds in " + town : "") + "." +
+        ((h[FL] & F_VALEST) && t.newPsf ? " Finished at that rate, the house alone would be worth about " + short(h[SF] * t.newPsf) +
+          ", so the atlas values the property at about " + short(h[VA]) + " instead of the assessed " + money(h[AS]) + "."
+          : " The finished house is likely worth much more.")]);
+    }
+    const sz = h[SZ], fmt = v => Math.round(v).toLocaleString("en-US");
+    const storiesTxt = f => (f === 1 ? "one story" : Number.isInteger(f) ? NUMW[f] + " stories" : String(+f.toFixed(2)) + " stories");
+    const storiesAdj = f => (Number.isInteger(f) ? NUMW[f] : String(+f.toFixed(2))) + "-story";
+    const photo = sz && sz[3] ? " on aerial photos (traced from " + sz[3] + " imagery)" : " on aerial photos";
+    const grossOnly = (h[FL] & F_GROSS) > 0;
+    // what the assessor's record says, in words: most towns list living area; Salem lists gross area only
+    const recTxt = (rec, gross) => grossOnly ? "The assessor records " + fmt(gross) + " sq ft of gross area, which for a house like this usually means about " + fmt(rec) + " sq ft of living area"
+                                             : "The assessor lists " + fmt(rec) + " sq ft of living area";
+    if (grossOnly && !(h[FL] & F_SIZEFIX) && h[GR]) {
+      out.push(["Living area estimated.", town + "'s assessor records gross area, not living area: " + fmt(h[GR]) + " sq ft, counting basement, attic, and porches. " +
+        "In towns that record both, living space is usually about " + Math.round(h[SF] / h[GR] * 100) + "% of that for a house of this kind and age, so the atlas uses about " + fmt(h[SF]) + " sq ft."]);
+    }
+    if ((h[FL] & F_SIZEFIX) && sz && sz[11] > 0) {
+      const rec = sz[6], gross = sz[10], down = h[SF] < rec, parts = [];
+      if (sz[7] && sz[11] === 1) parts.push(["the assessor's own gross building area (" + fmt(gross) + " sq ft, basement and garage included)", sz[7], " for this kind of house in " + town]);
+      if (sz[8]) parts.push(["its outline" + photo + ", " + fmt(sz[5]) + " sq ft of roof at " + storiesTxt(sz[2]) + ",", sz[8], ""]);
+      if (sz[9]) parts.push(["its house value, " + short(h[BL]) + ",", sz[9], " at typical prices for similar homes"]);
+      const said = parts.map((p, k) => p[0] + (k === 0 ? " works out to about " : " to about ") + fmt(Math.round(p[1] / 10) * 10) + p[2]);
+      const list = said.length > 1 ? said.slice(0, -1).join("; ") + "; and " + said[said.length - 1] : said[0];
+      if (sz[11] === 1) out.push(["Size corrected.", recTxt(rec, gross) +
+        (!grossOnly && gross && rec > gross ? ", more than the building's entire gross area of " + fmt(gross) + " sq ft" : "") + ". " +
+        (parts.length === 3 ? "Three independent clues all" : "Two independent clues both") + " put it well " + (down ? "below" : "above") + " that: " + list + ". " +
+        "The atlas uses " + (parts.length === 3 ? "the middle estimate, about " : "about ") + fmt(h[SF]) + " sq ft."]);
+      else out.push(["Size corrected.", recTxt(rec, gross) + (!grossOnly && gross && gross !== rec ? " (" + fmt(gross) + " sq ft gross)" : "") +
+        ", but the house looks much " + (down ? "smaller" : "bigger") + " than that: " + list + ". " +
+        "The record probably predates a rebuild or addition. The atlas uses about " + fmt(h[SF]) + " sq ft."]);
+    }
+    if (h[FL] & F_SIZEBIG) {
+      const fp = sz[5], cap = Math.round(fp * (sz[2] + 1) / 100) * 100;
+      out.push(["Size looks overstated.", (grossOnly ? recTxt(h[SF], h[GR]) : "The assessor lists " + fmt(h[SF]) + " sq ft") + ", but the house's outline" + photo + " is only " + fmt(fp) +
+        " sq ft of roof. At " + storiesTxt(sz[2]) + ", that's room for about " + fmt(cap) + " sq ft even with a finished basement and attic. " +
+        (sz[4] ? "The house value, $" + Math.round(psf(h)) + "/sq ft against about $" + sz[0] + " for similar homes in " + town + ", also fits a smaller house. "
+               : "Either the recorded size or the number of stories is probably wrong. ") + "It's left out of size rankings."]);
+    }
+    if (h[FL] & F_SIZESML) {
+      const fp = sz[5], x = fp * sz[2] / (1.18 * h[SF]);
+      out.push(["Size looks understated.", "The house's outline" + photo + " covers " + fmt(fp) + " sq ft of roof, about " + x.toFixed(1) +
+        " times what a " + storiesAdj(sz[2]) + " house of " + fmt(h[SF]) + " sq ft usually covers. Its value is also high for that size: $" +
+        Math.round(psf(h)) + "/sq ft against about $" + sz[0] + " for similar homes in " + town + ". The house is probably bigger than recorded."]);
+    }
+    if (h[FL] & F_HIGHV) {
+      const roof = sz[1], k = psf(h) / sz[0], big = Math.max(sz[7] || 0, sz[8] || 0);
+      const why = sz[12] === 1 ? " The outlines on the lot add up to " + fmt(roof) + " sq ft of roof, so other buildings (a barn, a garage, a second house) probably account for part of it."
+        : sz[12] === 2 && big ? " " + (sz[7] > 0 && sz[8] > 0 ? "Its gross building area and its outline on aerial photos point" : sz[8] > 0 ? "Its outline on aerial photos points" : "Its gross building area points") +
+          " to about " + fmt(Math.round(big / 10) * 10) + " sq ft, so the recorded " + fmt(h[SF]) + " sq ft may be too small."
+        : sz[12] === 3 ? " No building outline matched it, so its size can't be checked. Could be exceptional quality, or a recorded size that's too small."
+        : " Could be exceptional quality or location.";
+      out.push(["Value high for its size.", "The house itself is valued at $" + Math.round(psf(h)) + "/sq ft, about " + k.toFixed(1) +
+        " times the $" + sz[0] + " typical for similar-size homes in " + town + "." + why]);
+    }
+    if (h[FL] & F_LOW) {
+      const recent = h[YB] >= D.towns[h[TW]].fy - 4;
+      if (sz && sz[0]) out.push(["Value low for its size.", "The house itself is valued at $" + Math.round(psf(h)) + "/sq ft, under 40% of the $" + sz[0] +
+        " typical for similar-size homes in " + town + "." + (recent ? " It was built in " + h[YB] + ", so it may have been assessed before it was finished."
+        : " Usually that means condition, a deed restriction, an unusual use, or a data error, so it's worth a look on aerial photos.")]);
+      else out.push(["Value low for its size.", h[SF].toLocaleString("en-US") + " sq ft, but the house itself is valued at $" +
+        Math.round(psf(h)) + "/sq ft, far below similar homes. Could be condition, an unusual use, or a data error."]);
+    }
+    if (h[FL] & F_MULTI) out.push(["Several houses.", "More than one house on this lot. The value covers all of them; depending on the town's records, the living area may count only the main house."]);
+    if (h[FL] & F_LINE) out.push(["On the town line.", "The house straddles the " + town + "–" + h[LINE] + " line, so part of it may be taxed by " + h[LINE] + "."]);
+    if (h[FL] & F_PIN) out.push(["No building matched.", "Nothing in the state's building outlines matched this house, so the pin marks the lot. The outlines are mostly from 2011, so a newer house may simply be missing."]);
+    return out;
+  }
+  const ymOf = m => m ? Math.floor(m / 12) + "-" + String(m % 12 + 1).padStart(2, "0") : "";
+  function badges(h) {
+    const b = whyTags(h).map(t => ["why" + (MUTED_WHY.has(t) ? " muted" : ""), t]);
+    if (h[LM] >= 0) b.push(["lm", "Landmark"]);
+    if (h[FL] & F_SALE) b.push(["est", "Valued by sale"]);
+    if (h[FL] & F_LAND) b.push(["est", "Land corrected"]);
+    if (h[FL] & F_CR) b.push(["", "Protected land"]);
+    if (h[FL] & F_EST) b.push(["", "Estate"]);
+    if (h[FL] & F_VALEST) b.push(["est", "Finished value estimated"]);
+    else if (h[FL] & F_NEW) b.push(["", "Unfinished when assessed"]);
+    if (h[FL] & F_SIZEFIX) b.push(["est", "Size corrected"]);
+    if (h[FL] & F_SIZEBIG) b.push(["", "Size looks overstated"]);
+    if (h[FL] & F_SIZESML) b.push(["", "Size looks understated"]);
+    if (h[FL] & F_HIGHV) b.push(["", "Value high for size"]);
+    if (h[FL] & F_LOW) b.push(["", "Value low for size"]);
+    if (h[FL] & F_LINE) b.push(["", "On town line"]);
+    if (h[FL] & F_PIN) b.push(["", "Pin on lot"]);
+    return b;
+  }
+  function firstCaveat(f) {
+    for (const [bit, lab] of [[F_SALE, "Valued by sale"], [F_LAND, "Land corrected"], [F_CR, "Protected land"], [F_VALEST, "Finished value estimated"],
+                              [F_NEW, "Unfinished when assessed"], [F_SIZEFIX, "Size corrected"], [F_SIZEBIG, "Size looks overstated"], [F_SIZESML, "Size looks understated"], [F_HIGHV, "Value high for size"],
+                              [F_LOW, "Value low for size"], [F_EST, "Estate"], [F_LINE, "On town line"], [F_PIN, "Pin on lot"]]) if (f & bit) return lab;
+    return "";
+  }
+  function landmarkEl(h) {
+    if (h[LM] < 0) return null;
+    const [title, text, srcs] = D.landmarks[h[LM]];
+    const box = el("div", "landmark");
+    box.append(el("p", "eyebrow", "Landmark"), el("strong", null, title), el("p", null, text));
+    const src = el("p", "lm-src", "Sources: ");
+    srcs.forEach((k, n) => {
+      const a = el("a", null, D.sources[k][0]); a.href = D.sources[k][1]; a.target = "_blank"; a.rel = "noopener";
+      src.append(a); if (n < srcs.length - 1) src.append(document.createTextNode(" · "));
+    });
+    box.append(src);
+    return box;
+  }
+  const lastSaleTxt = h => {
+    if (!h[SY]) return "";
+    const yr = saleYear(h);
+    if (h[YB] && yr < h[YB]) return "Bought as land " + monthTxt(h[SY]) + " for " + money(h[SP]) + "; house built " + h[YB];
+    return "Last sale " + monthTxt(h[SY]) + ", " + money(h[SP]) + (h[SIMP] ? " (about " + short(h[SIMP]) + " at " + priceTxt(h[TW]) + ")" : "");
+  };
+  const badgeEl = h => { const w = el("span", "badges"); badges(h).forEach(([c, t]) => w.append(el("span", "badge" + (c ? " " + c : ""), t))); return w; };
+  const metaTxt = (h, withTown) => [withTown ? TOWNS[h[TW]] : "", TYPE[h[TY]], h[SF] ? sfTxt(h) : "",
+    h[AC] > 0 ? acresTxt(h[AC]) + " ac" : "", h[YB] ? "built " + h[YB] : ""].filter(Boolean).join(" · ");
+  const caveatList = h => {
+    const cv = caveats(h); if (!cv.length) return null;
+    const ul = el("ul", "caveats"); cv.forEach(([b, t]) => { const li = el("li"); li.append(el("b", null, b), document.createTextNode(t)); ul.append(li); });
+    return ul;
+  };
+
+  // ---------------- state ----------------
+  const state = { scope: "all", q: "", t: "", sort: "value", shown: 50, sel: 0, near: false, radius: 1, spot: null, picking: false, view3d: false, coll: null, home: -1 };
+  let collStat = null, pendingHome = null;
+  const inScope = h => state.scope === "all" || h[TW] === state.scope;
+  const scopeKey = () => state.scope === "all" ? "all" : String(state.scope);
+  const scopeName = () => state.scope === "all" ? "the " + nTowns() + " towns" : TOWNS[state.scope];
+  const rankOf = h => state.scope === "all" || state.near ? h[REG] : h[TR];
+  const distMi = h => state.spot ? Math.hypot(h[X] - state.spot.x, h[Y] - state.spot.y) / MILE : Infinity;
+
+  // ---------------- leaders, stats, records ----------------
+  const leadersEl = document.getElementById("leaders");
+  function renderLeaders() {
+    const idx = []; for (let i = 0; i < H.length && idx.length < 5; i++) if (inScope(H[i])) idx.push(i);
+    const w = H[idx[0]];
+    leadersEl.replaceChildren();
+    const card = el("article", "winner");
+    card.append(el("p", "eyebrow", "#1 in " + scopeName() + " · most valuable home"));
+    const h2 = el("h2", null, w[AD]); h2.append(el("small", null, TOWNS[w[TW]])); card.append(h2);
+    const hn = el("p", "hero-num", valTxt(w)); hn.append(el("span", null, isEst(w) ? "estimated · assessed " + money(w[AS]) : "assessed")); card.append(hn);
+    const wyw = whyEl(w); if (wyw) card.append(wyw);
+    const dl = el("dl", "facts");
+    [["Living area", w[SF] ? sfTxt(w) : "—"], ["Lot", w[AC] ? acresTxt(w[AC]) + " acres" : "—"],
+     ["Built", w[YB] || "—"], [(w[FL] & F_MULTI) || ((w[FL] & F_HIGHV) && w[SZ] && w[SZ][12] === 1) ? "Buildings" : "House alone", short(w[BL])]].forEach(([k, v]) => { const d = el("div"); d.append(el("dt", null, k), el("dd", null, String(v))); dl.append(d); });
+    card.append(dl);
+    const lmw = landmarkEl(w); if (lmw) card.append(lmw);
+    const cvl = caveatList(w); if (cvl) card.append(cvl);
+    const act = el("div", "actions");
+    const sm = el("button", "btn-2", "Show on map"); sm.type = "button"; sm.addEventListener("click", () => select(idx[0], { reveal: "always", zoom: true }));
+    act.append(sm); card.append(act);
+
+    const side = el("aside", "runners");
+    const head = el("div", "runners-head"); head.append(el("h3", "eyebrow", "Close behind"), el("span", "eyebrow", "vs. #1")); side.append(head);
+    const ol = el("ol");
+    idx.slice(1).forEach((i, n) => {
+      const h = H[i], li = el("li");
+      const b = el("button", "linkish", h[AD]); b.type = "button"; b.addEventListener("click", () => select(i, { reveal: "always", zoom: true }));
+      const mid = el("span"); mid.append(b, el("span", "sub", metaTxt(h, state.scope === "all")));
+      if (badges(h).length) mid.append(badgeEl(h));
+      const v = el("span", "v", valTxt(h)); v.append(el("span", null, ((h[VA] / w[VA] - 1) * 100).toFixed(0).replace("-", "−") + "%"));
+      li.append(el("span", "rk", String(n + 2)), mid, v); ol.append(li);
+    });
+    side.append(ol);
+    const second = H[idx[1]];
+    let note = "";
+    const gap = 1 - second[VA] / w[VA];
+    if (gap < 0.08) note = "#1 and #2 are within " + Math.max(1, Math.ceil(gap * 100)) + "% of each other, closer than these estimates can reliably separate." +
+      ((w[FL] & F_SALE) && (second[FL] & F_SALE) ? " Both values come from sales." : "");
+    else if ((w[FL] & F_SALE) && w[AS] < second[VA]) note = "#1 is assessed below #2 (" + money(w[AS]) + " vs " + money(second[AS]) + "), but its own sale shows it's worth more. The note on the left has the details.";
+    else if ((w[FL] & F_LAND) && w[AS] < second[VA]) note = "#1 is assessed below #2 (" + money(w[AS]) + " vs " + money(second[VA]) + "), but its land is assessed at farm rates. Corrected, it comes out ahead.";
+    if (note) side.append(el("p", "note", note));
+    leadersEl.append(card, side);
+  }
+
+  const statsEl = document.getElementById("stats");
+  function renderStats() {
+    let n, median, n2, n3, date;
+    if (state.scope === "all") {
+      if (!statsAll) {
+        const v = Float64Array.from(H, h => h[VA]).sort();
+        statsAll = { n: v.length, median: v[Math.floor(v.length / 2)], n2: v.filter(x => x >= 2e6).length, n3: v.filter(x => x >= 3e6).length };
+      }
+      ({ n, median, n2, n3 } = statsAll);
+      const ys = [...new Set(D.towns.map(t => t.fy - 1))].sort();
+      date = ys.length === 1 ? D.towns[0].valDate : "Jan 1, " + ys[0] + "–" + String(ys[ys.length - 1]).slice(2);
+    } else {
+      const t = D.towns[state.scope]; n = t.n; median = t.median; n2 = t.n2m; n3 = t.n3m; date = t.valDate;
+    }
+    statsEl.replaceChildren();
+    [[n.toLocaleString("en-US"), "homes"], [money(median), "median home"], [n2.toLocaleString("en-US"), "homes at $2M+"], [n3.toLocaleString("en-US"), "homes at $3M+"], [date, date.includes("–") ? "valuation dates" : "valuation date"]]
+      .forEach(([a, b]) => { const d = el("div"); d.append(el("strong", null, a), el("span", null, b)); statsEl.append(d); });
+  }
+
+  const recEl = document.getElementById("records");
+  const REC = {
+    value: ["Most valuable", r => valTxt(H[r.h]), r => (H[r.h][FL] & F_SALE) ? "Based on its own sale; assessed " + short(H[r.h][AS]) : (H[r.h][FL] & F_LAND) ? "Land re-valued; assessed " + short(H[r.h][AS])
+                                   : (H[r.h][FL] & F_VALEST) ? "Estimated as finished; assessed " + short(H[r.h][AS]) : "Assessed value"],
+    house: ["Priciest house", r => short(H[r.h][BL]), r => "The house alone, not counting land" + ((H[r.h][FL] & F_MULTI) ? " (several houses on one lot)" : "")],
+    size: ["Biggest house", r => sfTxt(H[r.h]), r => (H[r.h][FL] & F_SIZEFIX) ? "Living area, corrected from the assessor's " + H[r.h][SZ][6].toLocaleString("en-US") + " sq ft" :
+                                   (H[r.h][FL] & F_GROSS) ? "Living area, estimated from the assessor's gross area of " + H[r.h][GR].toLocaleString("en-US") + " sq ft" + ((H[r.h][FL] & F_MULTI) ? " for all the houses on the lot" : "") : (H[r.h][FL] & F_LOW) ? "Living area. Its value is low for that size, so it's worth a look on aerial photos." : (H[r.h][FL] & F_SIZESML) ? "Living area as recorded; the aerial suggests it's even bigger" : (H[r.h][FL] & F_MULTI) ? "Living area of all the houses on the lot" : "Living area"],
+    estate: ["Biggest estate", r => D.estates[r.e][5] + " acres", r => D.estates[r.e][4] + " parcels sold together on one deed" + (D.estates[r.e][2].length > 1 ? ", " + D.estates[r.e][2].length + " houses" : "")],
+    oldest: ["Oldest home", r => String(H[r.h][YB]), r => "Year built, per the assessor"],
+    newest: ["Newest mansion", r => String(H[r.h][YB]), r => sfTxt(H[r.h]) + ((H[r.h][FL] & F_VALEST) ? ". Assessed before it was finished; valued here as finished." : (H[r.h][FL] & F_NEW) ? ". Assessed before it was finished." : "")],
+    street: ["Priciest street", r => short(r.median), r => "Median of " + r.n + " homes"],
+  };
+  function renderRecords() {
+    recEl.replaceChildren();
+    (D.recs[scopeKey()] || []).forEach(r => {
+      const [title, fig, ctx] = REC[r.k], h = H[r.h];
+      const card = el("article", "rec");
+      card.append(el("p", "eyebrow", title), el("p", "fig", fig(r)));
+      card.append(el("p", "who", r.k === "street" ? r.street + ", " + TOWNS[r.town] : h[AD] + ", " + TOWNS[h[TW]]));
+      card.append(el("p", "ctx", (r.k !== "street" && h[LM] >= 0 ? D.landmarks[h[LM]][0] + ". " : "") + ctx(r)));
+      const act = el("div", "actions");
+      const sm = el("button", "btn-2 btn-sm", r.k === "street" ? "Show street" : "Show on map"); sm.type = "button";
+      sm.addEventListener("click", () => {
+        if (r.k === "street") showStreet(r.street, r.h);
+        else select(r.h, { reveal: "always", zoom: true });
+      });
+      act.append(sm);
+      card.append(act); recEl.append(card);
+    });
+  }
+  function showStreet(name, first) {
+    state.coll = null; qEl.value = name; state.q = norm(name); state.shown = 50; render(); fitResults(); select(first, {});
+    document.getElementById("map-panel").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  }
+
+  // ---------------- map: canvases and view ----------------
+  const wrap = document.getElementById("map-wrap"), baseCv = document.getElementById("base"), topCv = document.getElementById("map");
+  const bctx = baseCv.getContext("2d"), tctx = topCv.getContext("2d");
+  const overlay = document.getElementById("overlay"), tip = document.getElementById("tip"), lodNote = document.getElementById("lod-note");
+  const zoomEl = document.getElementById("zoom");
+  const snapCv = document.createElement("canvas"), sctx = snapCv.getContext("2d");
+  let cw = 0, ch = 0, dpr = 1, full = null, vb = null, COL = null;
+  function readColors() {
+    const cs = getComputedStyle(document.documentElement), g = n => cs.getPropertyValue(n).trim();
+    COL = { bg: g("--surface"), land: g("--land"), non: g("--nonhome"), gap: g("--gap"), ink: g("--ink"), ink2: g("--ink-2"), spot: g("--spot"),
+            q: [g("--nonhome"), g("--q1"), g("--q2"), g("--q3"), g("--q4"), g("--q5")] };
+  }
+  function resize() {
+    const r = wrap.getBoundingClientRect();
+    if (r.width < 2 || r.height < 2) return;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cw = r.width; ch = r.height;
+    for (const c of [baseCv, topCv, snapCv]) { c.width = Math.round(cw * dpr); c.height = Math.round(ch * dpr); }
+    snap.ok = false;
+    if (!vb) vb = fitBox(0, 0, full.w, full.h, 0.04);
+    drawNow();
+  }
+  const scaleOf = () => Math.min(cw / vb.w, ch / vb.h);
+  function frame() { const s = scaleOf(); return { s, ox: (cw - vb.w * s) / 2, oy: (ch - vb.h * s) / 2 }; }
+  function toScreen(x, y) { const f = frame(); return [f.ox + (x - vb.x) * f.s, f.oy + (y - vb.y) * f.s]; }
+  function toMap(cx, cy) { const r = topCv.getBoundingClientRect(), f = frame(); return [vb.x + (cx - r.left - f.ox) / f.s, vb.y + (cy - r.top - f.oy) / f.s]; }
+
+  let queued = false, interacting = false, settleT = 0, lastMs = 0, frameNo = 0;
+  const snap = { ok: false, vb: null, f: null };
+  function requestDraw() { if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; drawNow(); }); } }
+  function drawNow() {
+    if (!vb || !cw) return;
+    if (!state.view3d) {
+      if (interacting && snap.ok && lastMs > 14) drawSnap();
+      else { const t0 = performance.now(); drawBase(); lastMs = performance.now() - t0; takeSnap(); }
+      drawTop();
+    }
+    placeOverlay();
+  }
+  function moving() { interacting = true; clearTimeout(settleT); settleT = setTimeout(() => { interacting = false; requestDraw(); }, 170); }
+  function takeSnap() {
+    sctx.setTransform(1, 0, 0, 1, 0, 0); sctx.clearRect(0, 0, snapCv.width, snapCv.height); sctx.drawImage(baseCv, 0, 0);
+    snap.vb = { ...vb }; snap.f = frame(); snap.ok = true;
+  }
+  function drawSnap() {
+    const f = frame(), f0 = snap.f, k = f.s / f0.s;
+    const dx = f.ox + (snap.vb.x - vb.x) * f.s - k * f0.ox, dy = f.oy + (snap.vb.y - vb.y) * f.s - k * f0.oy;
+    bctx.setTransform(1, 0, 0, 1, 0, 0); bctx.fillStyle = COL.bg; bctx.fillRect(0, 0, baseCv.width, baseCv.height);
+    bctx.setTransform(dpr * k, 0, 0, dpr * k, dpr * dx, dpr * dy);
+    bctx.drawImage(snapCv, 0, 0, snapCv.width / dpr, snapCv.height / dpr);
+    bctx.setTransform(1, 0, 0, 1, 0, 0);
+  }
+  function ringTo(p, r, s, ox, oy) {             // closes with lineTo: Path2D.closePath gets slow on very long paths
+    const x0 = ox + r[0] * s, y0 = oy + r[1] * s;
+    p.moveTo(x0, y0);
+    for (let k = 2; k < r.length; k += 2) p.lineTo(ox + r[k] * s, oy + r[k + 1] * s);
+    p.lineTo(x0, y0);
+  }
+  function viewRect(f) { return { x0: vb.x - f.ox / f.s, y0: vb.y - f.oy / f.s, x1: vb.x + (cw - f.ox) / f.s, y1: vb.y + (ch - f.oy) / f.s }; }
+  function drawBase() {
+    const f = frame(), s = f.s, ox = f.ox - vb.x * s, oy = f.oy - vb.y * s, v = viewRect(f), c = bctx;
+    frameNo++;
+    c.setTransform(1, 0, 0, 1, 0, 0); c.fillStyle = COL.bg; c.fillRect(0, 0, baseCv.width, baseCv.height);
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const towns = new Path2D();
+    D.outlines.forEach(rings => rings.forEach(r => ringTo(towns, r, s, ox, oy)));
+    c.fillStyle = COL.land; c.fill(towns);
+    const parcelMode = 1 / s <= PARCEL_MPP;
+    const dotTowns = new Uint8Array(TOWNS.length);
+    let anyDots = !parcelMode;
+    if (parcelMode) {
+      const paths = []; for (let k = 0; k < 11; k++) paths.push(new Path2D());
+      const strokes = s >= 0.3 && !interacting, all = strokes ? new Path2D() : null;
+      for (let t = 0; t < TOWNS.length; t++) {
+        const b = D.towns[t].bbox;
+        if (b[0] > v.x1 || b[2] < v.x0 || b[1] > v.y1 || b[3] < v.y0) continue;
+        const rec = TD[t];
+        if (rec && rec.ready) addParcels(t, v, s, ox, oy, paths, all);
+        else { dotTowns[t] = 1; anyDots = true; ensureTown(t).catch(() => {}); }
+      }
+      c.fillStyle = COL.non; c.fill(paths[0], "evenodd");
+      c.globalAlpha = 0.14;
+      for (let b = 1; b <= 5; b++) { c.fillStyle = COL.q[b]; c.fill(paths[5 + b], "evenodd"); }
+      c.globalAlpha = 1;
+      for (let b = 1; b <= 5; b++) { c.fillStyle = COL.q[b]; c.fill(paths[b], "evenodd"); }
+      if (all) { c.strokeStyle = COL.gap; c.lineWidth = Math.min(1.2, 0.35 + s * 0.35); c.stroke(all); }
+      if (anyDots) drawDots(v, s, ox, oy, dotTowns);
+    } else drawDots(v, s, ox, oy, null);
+    c.strokeStyle = COL.ink2; c.globalAlpha = 0.55; c.lineWidth = 1.2; c.stroke(towns); c.globalAlpha = 1;
+    lodNote.hidden = parcelMode || state.picking || !fitRes.hidden;
+  }
+  function clsOf(t, p) {
+    const hs = TD[t].ph[p];
+    if (!hs) return 0;
+    if (!dimActive) return BIN[hs[0]];
+    for (let k = 0; k < hs.length; k++) if (MATCH[hs[k]]) return BIN[hs[k]];
+    return 5 + BIN[hs[0]];
+  }
+  function addParcels(t, v, s, ox, oy, paths, all) {
+    const rec = TD[t], st = rec.stamp, bb = rec.bb, minPx = 0.35 / s, tiny = 2.5 / s, R = s < 0.67 ? rec.coarse : rec.rings;
+    const cx0 = Math.max(0, Math.floor(v.x0 / PCELL)), cx1 = Math.floor(v.x1 / PCELL), cy0 = Math.max(0, Math.floor(v.y0 / PCELL)), cy1 = Math.floor(v.y1 / PCELL);
+    for (let cy = cy0; cy <= cy1; cy++) for (let cx = cx0; cx <= cx1; cx++) {
+      const arr = rec.grid.get(cy * 1000 + cx); if (!arr) continue;
+      for (let n = 0; n < arr.length; n++) {
+        const p = arr[n]; if (st[p] === frameNo) continue; st[p] = frameNo;
+        const q = 4 * p;
+        if (bb[q] > v.x1 || bb[q + 2] < v.x0 || bb[q + 1] > v.y1 || bb[q + 3] < v.y0) continue;
+        const bw = bb[q + 2] - bb[q], bh = bb[q + 3] - bb[q + 1];
+        if (bw < minPx && bh < minPx) continue;
+        const path = paths[clsOf(t, p)];
+        if (bw < tiny && bh < tiny) { path.rect(ox + bb[q] * s, oy + bb[q + 1] * s, bw * s, bh * s); continue; }
+        for (const r of R[p]) { ringTo(path, r, s, ox, oy); if (all) ringTo(all, r, s, ox, oy); }
+      }
+    }
+  }
+  function drawDots(v, s, ox, oy, onlyTowns) {
+    const c = bctx, pad = 200;
+    const passes = dimActive ? [0.14, 1] : [1];
+    for (const alpha of passes) {
+      c.globalAlpha = alpha;
+      for (let b = 1; b <= 5; b++) {
+        const list = BYBIN[b], path = new Path2D();
+        for (let n = 0; n < list.length; n++) {
+          const i = list[n];
+          if (onlyTowns && !onlyTowns[TWA[i]]) continue;
+          if (dimActive && (alpha === 1) !== (MATCH[i] === 1)) continue;
+          const x = XA[i], y = YA[i];
+          if (x < v.x0 - pad || x > v.x1 + pad || y < v.y0 - pad || y > v.y1 + pad) continue;
+          const hs = Math.max(0.85, HALF[i] * s);
+          path.rect(ox + x * s - hs, oy + y * s - hs, hs * 2, hs * 2);
+        }
+        c.fillStyle = COL.q[b]; c.fill(path);
+      }
+    }
+    c.globalAlpha = 1;
+  }
+  let hov = null;
+  function drawTop() {
+    const c = tctx;
+    c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, topCv.width, topCv.height);
+    if (state.view3d || !vb) return;
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const f = frame(), s = f.s, ox = f.ox - vb.x * s, oy = f.oy - vb.y * s;
+    if (state.near && state.spot) {
+      c.beginPath(); c.arc(ox + state.spot.x * s, oy + state.spot.y * s, state.radius * MILE * s, 0, Math.PI * 2);
+      c.globalAlpha = 0.06; c.fillStyle = COL.spot; c.fill(); c.globalAlpha = 1;
+      c.strokeStyle = COL.spot; c.lineWidth = 1.5; c.stroke();
+    }
+    const h = H[state.sel];
+    if (h) {
+      const e = h[ES] >= 0 ? D.estates[h[ES]] : null;
+      if (e) outlineParcels(e[0], e[3].filter(p => p !== h[PI]), 2, [5, 3], s, ox, oy);
+      if (h[PI] >= 0) outlineParcels(h[TW], [h[PI]], 2.5, null, s, ox, oy);
+    }
+    if (hov) outlineParcels(hov.t, [hov.p], 1.5, null, s, ox, oy);
+  }
+  function outlineParcels(t, list, w, dash, s, ox, oy) {
+    const rec = TD[t]; if (!rec || !rec.ready || !list.length) return;
+    const p = new Path2D();
+    list.forEach(pi => { const rings = rec.rings[pi]; if (rings) rings.forEach(r => ringTo(p, r, s, ox, oy)); });
+    tctx.setLineDash(dash || []); tctx.strokeStyle = COL.ink; tctx.lineWidth = w; tctx.stroke(p); tctx.setLineDash([]);
+  }
+  function clampVB(v) {
+    const minW = 80, maxW = full.w * 1.4;
+    const w = Math.min(maxW, Math.max(minW, v.w)), h = w * (v.h / v.w);
+    const x = Math.min(full.w - w * 0.3, Math.max(-w * 0.7, v.x)), y = Math.min(full.h - h * 0.3, Math.max(-h * 0.7, v.y));
+    return { x, y, w, h };
+  }
+  const applyVB = () => requestDraw();
+  let anim = 0;
+  function animateTo(target) {
+    target = clampVB(target);
+    cancelAnimationFrame(anim);
+    if (reduceMotion || !cw) { vb = target; applyVB(); return; }
+    const from = { ...vb }, t0 = performance.now(), dur = 450;
+    const step = now => {
+      const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      vb = { x: from.x + (target.x - from.x) * e, y: from.y + (target.y - from.y) * e, w: from.w + (target.w - from.w) * e, h: from.h + (target.h - from.h) * e };
+      moving(); drawNow();
+      if (k < 1) anim = requestAnimationFrame(step);
+    };
+    anim = requestAnimationFrame(step);
+  }
+  function fitBox(x0, y0, x1, y1, pad) {
+    const aspect = (ch || 1) / (cw || 1);
+    let w = (x1 - x0) * (1 + pad), h = (y1 - y0) * (1 + pad);
+    if (h / w > aspect) w = h / aspect; else h = w * aspect;
+    w = Math.max(w, 90); h = w * aspect;
+    return { x: (x0 + x1) / 2 - w / 2, y: (y0 + y1) / 2 - h / 2, w, h };
+  }
+  function fitScope() {
+    if (state.scope === "all") { animateTo(fitBox(0, 0, full.w, full.h, 0.04)); return; }
+    const b = D.towns[state.scope].bbox; animateTo(fitBox(b[0], b[1], b[2], b[3], 0.08));
+  }
+  function zoomAt(f, cx, cy) {
+    const [mx, my] = cx == null ? [vb.x + vb.w / 2, vb.y + vb.h / 2] : toMap(cx, cy);
+    vb = clampVB({ x: mx - (mx - vb.x) / f, y: my - (my - vb.y) / f, w: vb.w / f, h: vb.h / f });
+    applyVB();
+  }
+  wrap.addEventListener("wheel", e => {
+    if (state.view3d) return;
+    e.preventDefault(); moving(); hideTip();
+    zoomAt(Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0022)), e.clientX, e.clientY);
+  }, { passive: false });
+  const ptrs = new Map(); let drag = null, pinch = null, moved = false;
+  topCv.addEventListener("pointerdown", e => {
+    topCv.setPointerCapture(e.pointerId);
+    ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    moved = false;
+    if (ptrs.size === 1) drag = { x: e.clientX, y: e.clientY, vb: { ...vb } };
+    if (ptrs.size === 2) {
+      const [a, b] = [...ptrs.values()];
+      pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), vb: { ...vb }, c: [(a.x + b.x) / 2, (a.y + b.y) / 2] };
+      drag = null;
+    }
+  });
+  topCv.addEventListener("pointermove", e => {
+    if (ptrs.has(e.pointerId)) ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pinch && ptrs.size === 2) {
+      const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y);
+      vb = { ...pinch.vb }; moving(); moved = true; hideTip();
+      zoomAt(d / pinch.d, pinch.c[0], pinch.c[1]);
+      return;
+    }
+    if (drag) {
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      if (!moved && Math.hypot(dx, dy) < 5) return;
+      moved = true; topCv.classList.add("dragging"); moving(); hideTip();
+      const s = scaleOf();
+      vb = clampVB({ ...drag.vb, x: drag.vb.x - dx / s, y: drag.vb.y - dy / s }); applyVB();
+      return;
+    }
+    if (e.pointerType !== "touch") hover(e);
+  });
+  const endPtr = e => {
+    ptrs.delete(e.pointerId);
+    if (ptrs.size < 2) pinch = null;
+    if (ptrs.size === 0) {
+      topCv.classList.remove("dragging");
+      if (drag && !moved) mapClick(e);
+      drag = null;
+    }
+  };
+  topCv.addEventListener("pointerup", endPtr);
+  topCv.addEventListener("pointercancel", e => { ptrs.delete(e.pointerId); drag = null; pinch = null; topCv.classList.remove("dragging"); });
+  topCv.addEventListener("pointerleave", () => { if (!drag) hideTip(); });
+  document.getElementById("zin").addEventListener("click", () => animateTo({ x: vb.x + vb.w * 0.2, y: vb.y + vb.h * 0.2, w: vb.w * 0.6, h: vb.h * 0.6 }));
+  document.getElementById("zout").addEventListener("click", () => animateTo({ x: vb.x - vb.w * 0.33, y: vb.y - vb.h * 0.33, w: vb.w * 1.66, h: vb.h * 1.66 }));
+  document.getElementById("zfit").addEventListener("click", () => fitScope());
+
+  // ---------------- map: hit testing, hover, click ----------------
+  function inRings(rings, x, y) {
+    let c = false;
+    for (const r of rings) for (let i = 0, j = r.length - 2; i < r.length; j = i, i += 2) {
+      const xi = r[i], yi = r[i + 1], xj = r[j], yj = r[j + 1];
+      if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c;
+    }
+    return c;
+  }
+  function parcelAt(x, y) {
+    for (let t = 0; t < TOWNS.length; t++) {
+      const rec = TD[t]; if (!rec || !rec.ready) continue;
+      const b = D.towns[t].bbox; if (x < b[0] || x > b[2] || y < b[1] || y > b[3]) continue;
+      const arr = rec.grid.get(Math.floor(y / PCELL) * 1000 + Math.floor(x / PCELL)); if (!arr) continue;
+      let best = -1, area = Infinity; const bb = rec.bb;
+      for (const p of arr) {
+        const q = 4 * p;
+        if (x < bb[q] || x > bb[q + 2] || y < bb[q + 1] || y > bb[q + 3]) continue;
+        if (inRings(rec.rings[p], x, y)) { const a = (bb[q + 2] - bb[q]) * (bb[q + 3] - bb[q + 1]); if (a < area) { area = a; best = p; } }
+      }
+      if (best >= 0) return { t, p: best };
+    }
+    return null;
+  }
+  const parcelsShown = () => 1 / scaleOf() <= PARCEL_MPP;
+  function nearestHome(cx, cy, maxPx) {
+    const [mx, my] = toMap(cx, cy), lim = maxPx / scaleOf();
+    let best = -1, bd = lim * lim;
+    const x0 = Math.floor((mx - lim) / HCELL), x1 = Math.floor((mx + lim) / HCELL), y0 = Math.floor((my - lim) / HCELL), y1 = Math.floor((my + lim) / HCELL);
+    for (let gy = y0; gy <= y1; gy++) for (let gx = x0; gx <= x1; gx++) {
+      const arr = HG.get(gy * 1000 + gx); if (!arr) continue;
+      for (const i of arr) {
+        if (dimActive && !MATCH[i]) continue;
+        const dx = XA[i] - mx, dy = YA[i] - my, d = dx * dx + dy * dy;
+        if (d < bd) { bd = d; best = i; }
+      }
+    }
+    return best;
+  }
+  function homeAt(cx, cy, maxPx) {
+    if (parcelsShown()) {
+      const [mx, my] = toMap(cx, cy), np = parcelAt(mx, my);
+      if (np) { const hs = TD[np.t].ph[np.p]; return { i: hs ? hs[0] : -1, np }; }
+    }
+    return { i: nearestHome(cx, cy, maxPx), np: null };
+  }
+  function showTip(i, cx, cy) {
+    const h = H[i], r = wrap.getBoundingClientRect();
+    tip.replaceChildren(el("strong", null, valTxt(h)), el("span", null, h[AD] + ", " + TOWNS[h[TW]] + " · #" + rankOf(h).toLocaleString("en-US")));
+    if (whyTags(h).length) tip.append(el("span", null, whyTags(h).join(" · ")));
+    tip.hidden = false;
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    let x = cx - r.left - tw / 2, y = cy - r.top - th - 14;
+    if (y < 4) y = cy - r.top + 18;
+    tip.style.left = Math.max(4, Math.min(r.width - tw - 4, x)) + "px"; tip.style.top = y + "px";
+  }
+  function hideTip() { tip.hidden = true; if (hov) { hov = null; drawTop(); } }
+  let hoverEv = null, hoverQ = false;
+  function hover(e) { hoverEv = e; if (!hoverQ) { hoverQ = true; requestAnimationFrame(doHover); } }
+  function doHover() {
+    hoverQ = false;
+    const e = hoverEv; if (!e || state.picking || drag || state.view3d) return;
+    const { i, np } = homeAt(e.clientX, e.clientY, 12);
+    const was = hov ? hov.t + ":" + hov.p : "", now = np && i >= 0 ? np.t + ":" + np.p : "";
+    hov = np && i >= 0 ? np : null;
+    if (was !== now) drawTop();
+    if (i >= 0) showTip(i, e.clientX, e.clientY); else tip.hidden = true;
+  }
+  function mapClick(e) {
+    if (state.picking) { const [mx, my] = toMap(e.clientX, e.clientY); setSpot({ x: Math.round(mx), y: Math.round(my) }); return; }
+    let { i } = homeAt(e.clientX, e.clientY, 22);
+    if (i < 0) i = nearestHome(e.clientX, e.clientY, 22);
+    if (i >= 0) select(i, {});
+  }
+
+  // ---------------- map: overlay (pins, labels, selection ring, spot) ----------------
+  let pinEls = [], ringEl = null, spotEl = null, labelEls = [];
+  function placeOverlay() {
+    if (!vb || !cw) return;
+    const hideLabels = vb.w < full.w * 0.16;
+    const P = pinEls.map(p => { const [px, py] = toScreen(p.x, p.y); return { p, px, py, dx: 0, dy: 0 }; });
+    for (let k = 0; k < 24; k++) {
+      let any = false;
+      for (let a = 0; a < P.length; a++) for (let b = a + 1; b < P.length; b++) {
+        const A = P[a], B = P[b];
+        const vx = (B.px + B.dx) - (A.px + A.dx), vy = (B.py + B.dy) - (A.py + A.dy), d = Math.hypot(vx, vy), need = A.p.r + B.p.r + 2;
+        if (d < need) { const ux = d ? vx / d : 1, uy = d ? vy / d : 0, push = (need - d) / 2; A.dx -= ux * push; A.dy -= uy * push; B.dx += ux * push; B.dy += uy * push; any = true; }
+      }
+      if (!any) break;
+    }
+    P.forEach(q => { const st = q.p.n.style; st.left = q.px + "px"; st.top = q.py + "px"; st.setProperty("--dx", q.dx.toFixed(1) + "px"); st.setProperty("--dy", q.dy.toFixed(1) + "px"); });
+    // town names: bigger towns first; a name that would overlap one already placed tries just above, below, or beside its spot, else hides
+    const placed = P.map(q => [q.px + q.dx - q.p.r, q.py + q.dy - q.p.r, q.px + q.dx + q.p.r, q.py + q.dy + q.p.r]);   // pins are obstacles too
+    labelEls.forEach(L => {
+      L.n.hidden = hideLabels;
+      if (hideLabels) return;
+      if (!L.w) { L.w = L.n.offsetWidth; L.h = L.n.offsetHeight; }
+      const [px, py] = toScreen(L.x, L.y), w = L.w + 6, h = L.h;
+      const spot = [[0, 0], [0, -h], [0, h], [w * 0.55, 0], [-w * 0.55, 0], [w * 0.55, -h], [w * 0.55, h], [-w * 0.55, -h], [-w * 0.55, h], [w * 0.85, 0], [0, 2 * h], [0, -2 * h]].map(([dx, dy]) => [px + dx - w / 2, py + dy - h / 2, px + dx + w / 2, py + dy + h / 2])
+        .find(b => !placed.some(q => b[0] < q[2] && q[0] < b[2] && b[1] < q[3] && q[1] < b[3]));
+      if (!spot) { L.n.hidden = true; return; }
+      placed.push(spot);
+      L.n.style.left = (spot[0] + spot[2]) / 2 + "px"; L.n.style.top = (spot[1] + spot[3]) / 2 + "px";
+    });
+    if (ringEl && H[state.sel]) { const h = H[state.sel], [px, py] = toScreen(h[X], h[Y]); ringEl.style.left = px + "px"; ringEl.style.top = py + "px"; }
+    if (spotEl && state.spot) { const [px, py] = toScreen(state.spot.x, state.spot.y); spotEl.style.left = px + "px"; spotEl.style.top = py + "px"; }
+  }
+  function buildLabels() {
+    D.towns.forEach(t => { const n = el("div", "tlabel", t.name); overlay.append(n); labelEls.push({ n, x: t.label[0], y: t.label[1], pri: t.n }); });
+    labelEls.sort((a, b) => b.pri - a.pri);
+  }
+  function setPins(list) {
+    pinEls.forEach(p => p.n.remove()); pinEls = [];
+    list.slice(0, 10).forEach((i, k) => {
+      const h = H[i];
+      const b = el("button", "pin" + (k === 0 ? " p1" : ""), String(k + 1)); b.type = "button";
+      b.setAttribute("aria-label", (k + 1) + ": " + h[AD] + ", " + TOWNS[h[TW]] + ", " + valTxt(h));
+      b.addEventListener("click", () => select(i, {}));
+      b.addEventListener("pointerenter", e => showTip(i, e.clientX, e.clientY));
+      b.addEventListener("pointerleave", () => { tip.hidden = true; });
+      overlay.append(b); pinEls.push({ n: b, x: h[X], y: h[Y], r: k === 0 ? 16 : 13 });
+    });
+    if (ringEl) overlay.append(ringEl);
+    if (spotEl) overlay.append(spotEl);
+    placeOverlay();
+  }
+
+  // ---------------- near me ----------------
+  const nearBtn = document.getElementById("near"), radiusSel = document.getElementById("radius-sel"), setSpotBtn = document.getElementById("setspot"), hint = document.getElementById("hint");
+  function drawSpot() {
+    if (spotEl) spotEl.remove(); spotEl = null;
+    if (state.spot) { spotEl = el("div", "spot"); spotEl.append(el("i"), el("b", null, "My spot")); overlay.append(spotEl); }
+    drawTop(); placeOverlay();
+  }
+  function setPicking(on) {
+    state.picking = on; wrap.classList.toggle("picking", on); hint.hidden = !on;
+    setSpotBtn.textContent = on ? "Cancel" : (state.spot ? "Move my spot" : "Set my spot");
+    if (on) lodNote.hidden = true;
+  }
+  function saveSpot() {
+    if (!state.spot) return;
+    const [lon, lat] = llOf(state.spot.x, state.spot.y);
+    store.set("tt-spot2", JSON.stringify({ lat: +lat.toFixed(6), lon: +lon.toFixed(6) }));
+  }
+  function loadSpot() {
+    try {
+      const s2 = JSON.parse(store.get("tt-spot2") || "null");
+      if (s2 && isFinite(s2.lat) && isFinite(s2.lon)) return xyOf(s2.lon, s2.lat);
+      const s1 = JSON.parse(store.get("tt-spot") || "null");            // saved by the three-town version
+      if (s1 && isFinite(s1.x) && isFinite(s1.y)) { const p = xyOf(OLD.ax * s1.x + OLD.bx, OLD.ay * s1.y + OLD.by); state.spot = p; saveSpot(); return p; }
+    } catch (e) {}
+    return null;
+  }
+  const radiusBox = () => { const r = state.radius * MILE, s = state.spot; return fitBox(s.x - r, s.y - r, s.x + r, s.y + r, 0.15); };
+  function setSpot(s) {
+    state.spot = s; saveSpot(); setPicking(false);
+    state.near = true; nearBtn.setAttribute("aria-pressed", "true"); state.shown = 50;
+    drawSpot(); render();
+    animateTo(radiusBox());
+  }
+  setSpotBtn.addEventListener("click", () => { if (state.view3d) set3D(false); setPicking(!state.picking); if (state.picking) revealMap(); });
+  nearBtn.addEventListener("click", () => {
+    if (!state.spot) { if (state.view3d) set3D(false); setPicking(true); revealMap(); return; }
+    state.near = !state.near; nearBtn.setAttribute("aria-pressed", String(state.near)); state.shown = 50; drawSpot(); render();
+    if (state.view3d) { need3D().then(() => { update3D(); fit3D(); }).catch(() => {}); return; }
+    if (state.near) animateTo(radiusBox()); else fitScope();
+  });
+  radiusSel.addEventListener("change", () => {
+    state.radius = +radiusSel.value; state.shown = 50; drawSpot(); render();
+    if (state.near && state.spot && !state.view3d) animateTo(radiusBox());
+  });
+
+  // ---------------- selection + detail ----------------
+  const selEl = document.getElementById("selected");
+  function renderSelected() {
+    const h = H[state.sel];
+    if (!h) return;
+    selEl.replaceChildren();
+    const main = el("div", "sel-main");
+    const addr = el("span", "sel-addr", h[AD]); addr.append(el("small", null, TOWNS[h[TW]]));
+    main.append(el("span", "rk", "#" + rankOf(h).toLocaleString("en-US")), addr, el("span", "sel-v", valTxt(h)));
+    main.append(el("span", "sel-sub", metaTxt(h, false) + (h[ST] ? " · " + h[ST] : "")));
+    const parts = ["House " + money(h[BL]), "Land " + money(h[LA])];
+    if (h[OT] > 0) parts.push("Other " + money(h[OT]));
+    if (isEst(h)) parts.push("Assessed total " + money(h[AS]));
+    parts.push("Class " + h[UC]);
+    if (h[PID]) parts.push("Parcel " + h[PID].replace(/-/g, "‑"));
+    if (h[SY]) parts.push(lastSaleTxt(h));
+    if (h[FL] & F_GROSS) { if (h[GR]) parts.push("Assessor's gross area " + h[GR].toLocaleString("en-US") + " sq ft"); }
+    else if ((h[FL] & F_SIZEFIX) && h[SZ]) parts.push("Assessor's living area " + h[SZ][6].toLocaleString("en-US") + " sq ft");
+    if (h[FP] && !(h[OY] && h[YB] && h[OY] < h[YB])) parts.push("Roof outline " + h[FP].toLocaleString("en-US") + " sq ft (aerial photos" + (h[OY] ? ", " + h[OY] : "") + ")");
+    if (h[SB] >= 150) parts.push(h[SB].toLocaleString("en-US") + " ft from the nearest road");
+    if (state.spot) parts.push(distMi(h).toFixed(1) + " mi from your spot");
+    selEl.append(main, el("p", "sel-detail", parts.join(" · ")));
+    const wyh = whyEl(h); if (wyh) selEl.append(wyh);
+    const lmh = landmarkEl(h); if (lmh) selEl.append(lmh);
+    const cvl = caveatList(h); if (cvl) selEl.append(cvl);
+    const act = el("div", "actions");
+    const z = el("button", "btn-2 btn-sm", "Zoom here"); z.type = "button"; z.addEventListener("click", () => zoomToHome(state.sel));
+    const sp = el("button", "btn-2 btn-sm", "Make this my spot"); sp.type = "button"; sp.addEventListener("click", () => setSpot({ x: h[X], y: h[Y] }));
+    const mine = el("button", "btn-2 btn-sm", state.home === state.sel ? "My home ✓" : "This is my home"); mine.type = "button";
+    mine.addEventListener("click", () => setHome(state.sel));
+    act.append(z, sp, mine);
+    const rec = TD[h[TW]];
+    if (rec && rec.ready && h[PI] >= 0) {
+      const others = (rec.ph[h[PI]] || []).length - 1;
+      if (others > 0) act.append(el("span", "sub", others + " more " + (others === 1 ? "home shares" : "homes share") + " this parcel"));
+    }
+    selEl.append(act);
+  }
+  function zoomToHome(i) {
+    const h = H[i], span = Math.max(90, Math.sqrt(Math.max(h[AC], 0.5) * 4046.86) * 3);
+    if (state.view3d) { fly3D(i); return; }
+    animateTo(fitBox(h[X] - span / 2, h[Y] - span / 2, h[X] + span / 2, h[Y] + span / 2, 0));
+  }
+  function revealMap() {
+    if (window.matchMedia("(max-width: 940px)").matches) document.getElementById("map-panel").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  }
+  function select(i, opts) {
+    if (i == null || i < 0 || !H[i]) return;
+    state.sel = i;
+    const h = H[i];
+    renderSelected();
+    if (!ringEl) ringEl = el("div", "ring");
+    if (!ringEl.isConnected) overlay.append(ringEl);
+    drawTop(); placeOverlay();
+    document.querySelectorAll(".row.is-sel").forEach(r => r.classList.remove("is-sel"));
+    const row = rowsEl.querySelector('.row[data-i="' + i + '"]'); if (row) row.classList.add("is-sel");
+    ensureTown(h[TW]).then(() => { if (state.sel === i) { renderSelected(); drawTop(); } }).catch(() => {});
+    if (state.view3d) update3D();
+    if (opts && opts.reveal === "always") document.getElementById("map-panel").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    else if (opts && opts.reveal) revealMap();
+    if (opts && opts.zoom) zoomToHome(i);
+  }
+
+  // ---------------- list ----------------
+  const rowsEl = document.getElementById("rows"), countEl = document.getElementById("count"), rankNote = document.getElementById("rank-note");
+  const moreWrap = document.getElementById("more-wrap"), moreBtn = document.getElementById("more"), allBtn = document.getElementById("all");
+  const qEl = document.getElementById("q"), sortEl = document.getElementById("sort"), chipBtns = [...document.querySelectorAll("#chips button")];
+  const fitRes = document.getElementById("fitres");
+  const SORTS = {
+    value: null,
+    assessed: (a, b) => H[b][AS] - H[a][AS] || a - b,
+    house: (a, b) => H[b][BL] - H[a][BL] || a - b,
+    sqft: (a, b) => H[b][SF] - H[a][SF] || a - b,
+    acres: (a, b) => H[b][AC] - H[a][AC] || a - b,
+    oldest: (a, b) => (H[a][YB] || 9999) - (H[b][YB] || 9999) || a - b,
+    newest: (a, b) => H[b][YB] - H[a][YB] || a - b,
+  };
+  const COLL_STAT = {
+    landmarks: i => D.landmarks[H[i][LM]][0],
+    hidden: i => H[i][SB].toLocaleString("en-US") + " ft from the road",
+    mansions: i => sfTxt(H[i]),
+    oldest: i => "built " + H[i][YB],
+    land: i => acresTxt(H[i][AC]) + " acres",
+    newbig: i => "built " + H[i][YB] + " · " + sfTxt(H[i]),
+    sales: i => "sold " + monShort(H[i][SY]) + " · " + money(H[i][SP]),
+    traps: i => firstCaveat(H[i][FL]),
+    sizecheck: i => {
+      const h = H[i], f = h[FL], sz = h[SZ] || [];
+      const listed = n => (f & F_GROSS) ? "gross " + (h[GR] || 0).toLocaleString("en-US") + " sq ft" : "listed " + n.toLocaleString("en-US") + " sq ft";
+      if (f & F_SIZEFIX) return [listed(sz[6] || 0), "≈" + h[SF].toLocaleString("en-US") + " corrected"];
+      if (f & (F_SIZEBIG | F_SIZESML)) return [listed(h[SF]), "roof outline " + (sz[5] || 0).toLocaleString("en-US")];
+      return ["$" + Math.round(psf(h)) + "/sq ft", "typical ~$" + (sz[0] || "?")];
+    },
+  };
+  let filtered = [];
+  function rowEl(i) {
+    const h = H[i], li = el("li", "row" + (i === state.sel ? " is-sel" : "")); li.dataset.i = i;
+    const addr = el("div", "addr");
+    const b = el("button", "linkish", h[AD]); b.type = "button"; b.title = "Show on map";
+    b.addEventListener("click", () => select(i, { reveal: true, zoom: true }));
+    addr.append(b, el("span", "meta", metaTxt(h, state.scope === "all" || state.near)));
+    if (badges(h).length) addr.append(badgeEl(h));
+    const v = el("span", "v", valTxt(h));
+    if (state.near) v.append(el("small", null, distMi(h).toFixed(1) + " mi away"));
+    else if (collStat && collStat.has(i)) [].concat(collStat.get(i)).forEach(t => v.append(el("small", null, t)));
+    else if (isEst(h)) v.append(el("small", null, "assessed " + short(h[AS])));
+    else if (state.sort === "house") v.append(el("small", null, "house " + short(h[BL])));
+    li.append(el("span", "rk", "#" + rankOf(h).toLocaleString("en-US")), addr, v);
+    return li;
+  }
+  function render() {
+    const q = state.q, rmi = state.radius;
+    const coll = state.coll ? D.colls.find(c => c.k === state.coll) : null;
+    const src = coll ? coll.items[scopeKey()] || [] : null;
+    collStat = coll ? new Map(src.map(i => [i, COLL_STAT[coll.k](i)])) : null;
+    if (q && !hay) buildHay();
+    const words = q ? q.split(" ") : [];
+    const matchWords = i => words.every(w => hay[i].includes(w));
+    filtered = [];
+    for (let n = 0, N = src ? src.length : H.length; n < N; n++) {
+      const i = src ? src[n] : n, h = H[i];
+      if (state.near && state.spot) { if (distMi(h) > rmi) continue; }
+      else if (!inScope(h)) continue;
+      if (state.t === "!") { if (!(h[FL] & CAVEAT)) continue; }
+      else if (state.t && GROUP[h[TY]] !== state.t) continue;
+      if (q && !hay[i].includes(q)) continue;
+      filtered.push(i);
+    }
+    if (q && !filtered.length && words.length > 1) {          // no exact phrase: accept all the words in any order
+      for (let n = 0, N = src ? src.length : H.length; n < N; n++) {
+        const i = src ? src[n] : n, h = H[i];
+        if (state.near && state.spot) { if (distMi(h) > rmi) continue; }
+        else if (!inScope(h)) continue;
+        if (state.t === "!") { if (!(h[FL] & CAVEAT)) continue; }
+        else if (state.t && GROUP[h[TY]] !== state.t) continue;
+        if (matchWords(i)) filtered.push(i);
+      }
+    }
+    if (SORTS[state.sort] && !(coll && state.sort === "value")) filtered.sort(SORTS[state.sort]);
+    const n = Math.min(state.shown, filtered.length), frag = document.createDocumentFragment();
+    for (let k = 0; k < n; k++) frag.append(rowEl(filtered[k]));
+    rowsEl.replaceChildren(frag);
+    if (!filtered.length) rowsEl.append(el("li", "empty", state.near ? "No homes within " + rmi + " mi of your spot. Try a bigger radius." : "No homes match. Try a street name, like Phillips, Great Pond, or Lynn Shore."));
+    const where = state.near ? "within " + rmi + " mi of your spot" : "in " + scopeName();
+    const pill = document.getElementById("coll-pill");
+    pill.replaceChildren(); pill.hidden = !coll;
+    if (coll) {
+      pill.append(document.createTextNode(coll.t));
+      const x = el("button", null, "Clear ✕"); x.type = "button"; x.addEventListener("click", () => { state.coll = null; state.shown = 50; render(); });
+      pill.append(x);
+    }
+    countEl.textContent = filtered.length ? "Showing " + n.toLocaleString("en-US") + " of " + filtered.length.toLocaleString("en-US") + " homes " + where : "";
+    rankNote.textContent = "# = value rank " + (state.scope === "all" || state.near ? "across all " + nTowns() + " towns" : "in " + TOWNS[state.scope]);
+    const left = filtered.length - n;
+    moreWrap.hidden = left <= 0;
+    moreBtn.textContent = "Show " + Math.min(50, left) + " more";
+    allBtn.textContent = left <= 1000 ? "Show all" : "Show 500 more";
+    allBtn.hidden = left <= 50;
+    const active = !!(state.q || state.t || state.near || coll);
+    MATCH.fill(0);
+    if (active) for (const i of filtered) MATCH[i] = 1;
+    dimActive = active;
+    fitRes.hidden = !(state.q || state.t || coll) || !filtered.length || state.view3d;
+    setPins(filtered);
+    requestDraw();
+    if (state.view3d) update3D();
+  }
+  function fitResults() {
+    if (!filtered.length) return;
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    filtered.forEach(i => { const h = H[i]; x0 = Math.min(x0, h[X]); y0 = Math.min(y0, h[Y]); x1 = Math.max(x1, h[X]); y1 = Math.max(y1, h[Y]); });
+    animateTo(fitBox(x0, y0, x1, y1, 0.3));
+  }
+  fitRes.addEventListener("click", fitResults);
+  let qTimer = 0;
+  qEl.addEventListener("input", () => { clearTimeout(qTimer); qTimer = setTimeout(() => { state.q = norm(qEl.value); state.shown = 50; render(); }, 160); });
+  chipBtns.forEach(b => b.addEventListener("click", () => { chipBtns.forEach(x => x.setAttribute("aria-pressed", String(x === b))); state.t = b.dataset.t; state.shown = 50; render(); }));
+  sortEl.addEventListener("change", () => { state.sort = sortEl.value; state.shown = 50; render(); });
+  moreBtn.addEventListener("click", () => { state.shown += 50; render(); });
+  allBtn.addEventListener("click", () => { const left = filtered.length - state.shown; state.shown += left <= 1000 ? left : 500; render(); });
+
+  // ---------------- scope tabs ----------------
+  const scopeNav = document.getElementById("scope");
+  let scopeBtns = [];
+  function buildScopeTabs() {
+    const order = [["all", "All towns"], ...TOWNS.map((n, i) => [String(i), n]).sort((a, b) => a[1].localeCompare(b[1]))];
+    order.forEach(([k, label]) => {
+      const b = el("button", null, label); b.type = "button"; b.setAttribute("role", "tab"); b.dataset.scope = k;
+      b.setAttribute("aria-selected", String(k === "all")); scopeNav.append(b); scopeBtns.push(b);
+      b.addEventListener("click", () => setScope(k === "all" ? "all" : +k));
+    });
+  }
+  function setScope(sc) {
+    scopeBtns.forEach(x => x.setAttribute("aria-selected", String(x.dataset.scope === String(sc))));
+    state.scope = sc;
+    if (state.near) { state.near = false; nearBtn.setAttribute("aria-pressed", "false"); drawSpot(); }
+    state.shown = 50;
+    renderLeaders(); renderStats(); renderRecords(); renderColl(); render();
+    const first = H.findIndex(inScope); select(first, {});
+    if (state.view3d) need3D().then(() => { update3D(); fit3D(); }).catch(() => {}); else fitScope();
+  }
+
+  // ---------------- 3D skyline (deck.gl, loaded on first use) ----------------
+  const deckEl = document.getElementById("sky3d"), deckNote = document.getElementById("deck-note");
+  const v2 = document.getElementById("v2d"), v3 = document.getElementById("v3d");
+  let deckgl = null, deckLoading = null, themeVer = 0, outlinesLL = null;
+  const loadScript = src => new Promise((res, rej) => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = rej; document.head.append(s); });
+  function ensureDeck() {
+    if (deckLoading) return deckLoading;
+    const srcs = [window.__DECK_SRC, "https://cdn.jsdelivr.net/npm/deck.gl@9.1.15/dist.min.js", "https://unpkg.com/deck.gl@9.1.15/dist.min.js"].filter(Boolean);
+    deckLoading = (async () => {
+      if (!(window.deck && window.deck.DeckGL)) { let ok = false; for (const s of srcs) { try { await loadScript(s); ok = true; break; } catch (e) {} } if (!ok) throw new Error("load"); }
+    })();
+    deckLoading.catch(() => { deckLoading = null; });
+    return deckLoading;
+  }
+  function towns3D() {
+    if (state.near && state.spot) {
+      const r = state.radius * MILE, s = state.spot;
+      return TOWNS.map((_, t) => t).filter(t => { const b = D.towns[t].bbox; return !(b[0] > s.x + r || b[2] < s.x - r || b[1] > s.y + r || b[3] < s.y - r); });
+    }
+    return state.scope === "all" ? TOWNS.map((_, t) => t) : [state.scope];
+  }
+  async function need3D() { await ensureDeck(); await Promise.all(towns3D().map(ensureFP)); }
+  const cssColor = name => {
+    const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const m = v.match(/^#([0-9a-f]{6})$/i); if (!m) return [128, 128, 128];
+    const n = parseInt(m[1], 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  };
+  const EXAG = 2.2;
+  function polyOf(i) {
+    const h = H[i], arr = FPS[h[TW]], f = arr && arr[LI[i]], out = [];
+    const dLon = 1 / D.proj.mx, dLat = 1 / D.proj.my;
+    if (f && f.length >= 6) { for (let k = 0; k < f.length; k += 2) out.push([h[LON] + f[k] * 0.5 * EXAG * dLon, h[LAT] - f[k + 1] * 0.5 * EXAG * dLat]); }
+    else { const s = 9 * EXAG; out.push([h[LON] - s * dLon, h[LAT] - s * dLat], [h[LON] + s * dLon, h[LAT] - s * dLat], [h[LON] + s * dLon, h[LAT] + s * dLat], [h[LON] - s * dLon, h[LAT] + s * dLat]); }
+    return out;
+  }
+  function viewFor(x0, y0, x1, y1) {
+    const r = deckEl.getBoundingClientRect(), wm = x1 - x0, hm = y1 - y0;
+    const [lon, lat] = llOf((x0 + x1) / 2, (y0 + y1) / 2);
+    const mpp = Math.max(wm / Math.max(r.width, 1), hm / Math.max(r.height, 1)) * 1.15;
+    const zoom = Math.log2(156543.03 * Math.cos(lat * Math.PI / 180) / Math.max(mpp, 0.1));
+    return { longitude: lon, latitude: lat, zoom: zoom - 0.3, pitch: 55, bearing: -18 };
+  }
+  function scopeView() {
+    if (state.near && state.spot) { const r = state.radius * MILE, s = state.spot; return viewFor(s.x - r, s.y - r, s.x + r, s.y + r); }
+    if (state.scope === "all") return viewFor(0, 0, full.w, full.h);
+    const b = D.towns[state.scope].bbox; return viewFor(b[0], b[1], b[2], b[3]);
+  }
+  let shown3 = [];
+  function layers() {
+    const cols = [0, 1, 2, 3, 4, 5].map(k => cssColor(k ? "--q" + k : "--land"));
+    const ink = cssColor("--ink"), sel = cssColor("--spot");
+    if (!outlinesLL) outlinesLL = [].concat(...D.outlines.map(rings => rings.map(r => { const out = []; for (let k = 0; k < r.length; k += 2) out.push(llOf(r[k], r[k + 1])); return out; })));
+    shown3 = filtered.length > CAP3D ? filtered.slice().sort((a, b) => a - b).slice(0, CAP3D) : filtered.slice();
+    if (state.sel >= 0 && !shown3.includes(state.sel) && inScope(H[state.sel])) shown3.push(state.sel);
+    const ground = new deck.PolygonLayer({ id: "towns", data: outlinesLL, getPolygon: d => d, filled: true, stroked: true,
+      getFillColor: [...cols[0], 255], getLineColor: [...ink, 110], lineWidthMinPixels: 1 });
+    const houses = new deck.PolygonLayer({ id: "houses", data: shown3, getPolygon: i => polyOf(i), extruded: true, wireframe: false,
+      getElevation: i => H[i][VA] / 4500, getFillColor: i => i === state.sel ? [...sel, 255] : [...cols[BIN[i]], 255],
+      material: { ambient: 0.55, diffuse: 0.6, shininess: 12 }, pickable: true, autoHighlight: true, highlightColor: [...ink, 90],
+      updateTriggers: { getFillColor: [state.sel, themeVer], getPolygon: [FPS.filter(Boolean).length] } });
+    return [ground, houses];
+  }
+  function note3D() {
+    deckNote.textContent = (filtered.length > CAP3D ? "Showing the " + CAP3D.toLocaleString("en-US") + " most valuable of " + filtered.length.toLocaleString("en-US") + " homes. " : "") +
+      "Height shows value; houses are drawn wider than life. Drag to move; right-drag or two fingers to tilt and turn.";
+  }
+  function update3D() { if (deckgl) { deckgl.setProps({ layers: layers() }); note3D(); } }
+  function fit3D() { if (deckgl) deckgl.setProps({ initialViewState: { ...scopeView(), transitionDuration: reduceMotion ? 0 : 900 } }); }
+  function fly3D(i) {
+    const h = H[i]; if (!deckgl) return;
+    deckgl.setProps({ initialViewState: { longitude: h[LON], latitude: h[LAT], zoom: 16.2, pitch: 58, bearing: -18, transitionDuration: reduceMotion ? 0 : 1100 } });
+  }
+  async function set3D(on) {
+    state.view3d = on; v2.setAttribute("aria-pressed", String(!on)); v3.setAttribute("aria-pressed", String(on));
+    deckEl.hidden = !on; deckNote.hidden = !on; overlay.hidden = on; lodNote.hidden = true;
+    fitRes.hidden = on || !(state.q || state.t || state.coll) || !filtered.length;
+    zoomEl.hidden = on; tip.hidden = true;
+    if (!on) { drawNow(); return; }
+    if (state.picking) setPicking(false);
+    drawTop();
+    deckNote.textContent = "Loading the 3D view…";
+    try { await need3D(); }
+    catch (e) { deckNote.textContent = "The 3D view couldn't load here. The map view still has everything."; return; }
+    if (!state.view3d) return;
+    note3D();
+    if (!deckgl) {
+      deckgl = new deck.DeckGL({ container: deckEl, initialViewState: scopeView(), controller: true, layers: layers(),
+        getTooltip: ({ object }) => object == null ? null : { text: valTxt(H[object]) + "\n" + H[object][AD] + ", " + TOWNS[H[object][TW]],
+          style: { background: getComputedStyle(document.documentElement).getPropertyValue("--ink"), color: getComputedStyle(document.documentElement).getPropertyValue("--surface"), fontFamily: "Public Sans, system-ui, sans-serif", fontSize: "12.5px", borderRadius: "8px", padding: "7px 10px" } },
+        onClick: info => { if (info.object != null) select(info.object, {}); } });
+    } else { update3D(); fit3D(); }
+  }
+  v2.addEventListener("click", () => set3D(false));
+  v3.addEventListener("click", () => set3D(true));
+  const retheme = () => { themeVer++; readColors(); snap.ok = false; requestDraw(); if (deckgl) update3D(); };
+  const themeQ = window.matchMedia("(prefers-color-scheme: dark)");
+  if (themeQ.addEventListener) themeQ.addEventListener("change", retheme);
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  // ---------------- my home ----------------
+  const mhEl = document.getElementById("myhome");
+  const streetOf = a => a.replace(/^\S+\s+/, "").replace(/\s+#.*$/, "").replace(/\s+\(lot.*\)$/, "");
+  const within = (i, mi) => { const out = [], lim = mi * MILE, x = XA[i], y = YA[i]; for (let k = 0; k < H.length; k++) if (k !== i && Math.abs(XA[k] - x) <= lim && Math.abs(YA[k] - y) <= lim && Math.hypot(XA[k] - x, YA[k] - y) <= lim) out.push(k); return out; };
+  const miTxt = (i, k) => (Math.hypot(H[k][X] - H[i][X], H[k][Y] - H[i][Y]) / MILE).toFixed(1) + " mi";
+  function setHome(i) {
+    state.home = i; const h = H[i];
+    store.set("tt-home", JSON.stringify({ t: h[TW], p: h[PID] || "", a: h[AD] }));
+    if (!state.spot) { state.spot = { x: h[X], y: h[Y] }; saveSpot(); drawSpot(); }
+    renderMyHome(); if (state.sel === i) renderSelected();
+  }
+  function resolvePendingHome() {
+    const ph = pendingHome; if (!ph) return;
+    const i = TH[ph.t].find(g => H[g][PID] === ph.p);
+    pendingHome = null;
+    if (i != null) { state.home = i; renderMyHome(); }
+  }
+  function homeRow(label, k, extra) {
+    const li = el("li"), left = el("span");
+    left.append(el("span", "k", label + " "));
+    const b = el("button", "linkish", H[k][AD]); b.type = "button"; b.addEventListener("click", () => select(k, { reveal: "always", zoom: true }));
+    left.append(b); li.append(left, el("span", "sub", extra)); return li;
+  }
+  function renderMyHome() {
+    mhEl.replaceChildren();
+    mhEl.classList.toggle("empty", state.home < 0);
+    if (state.home < 0) {
+      const head = el("div", "mh-head"); head.append(el("h2", null, "Where does your house rank?")); mhEl.append(head);
+      mhEl.append(el("p", "note", "Type your address and pick it. The page remembers it on this device and shows how it stacks up in town, on your street, and around you."));
+      const f = el("div", "mh-find"), inp = el("input"); inp.type = "search"; inp.placeholder = "Your address, like 12 Main St"; inp.id = "mh-q"; inp.autocomplete = "off";
+      inp.setAttribute("aria-label", "Your address");
+      const sug = el("div", "mh-sugg");
+      inp.addEventListener("input", () => {
+        const q = norm(inp.value); sug.replaceChildren();
+        if (q.length < 3) return;
+        if (!hay) buildHay();
+        let n = 0;
+        const words = q.split(" ");
+        for (const pass of [i => hay[i].includes(q), i => words.every(w => hay[i].includes(w))]) {
+          for (let i = 0; i < H.length && n < 6; i++) if (pass(i)) {
+            const b = el("button", "btn-2 btn-sm", H[i][AD] + ", " + TOWNS[H[i][TW]]); b.type = "button"; b.addEventListener("click", () => setHome(i)); sug.append(b); n++;
+          }
+          if (n) break;
+        }
+        if (!n) sug.append(el("span", "sub", "No match yet. Try just the house number and street name."));
+      });
+      f.append(inp); mhEl.append(f, sug); return;
+    }
+    const i = state.home, h = H[i], t = D.towns[h[TW]];
+    const head = el("div", "mh-head"), h2 = el("h2", null, h[AD]); h2.append(el("small", null, TOWNS[h[TW]] + " · my home"));
+    head.append(h2, el("span", "mh-val", valTxt(h))); mhEl.append(head);
+    const st = streetOf(h[AD]);
+    const onStreet = TH[h[TW]].filter(k => streetOf(H[k][AD]) === st);
+    const near = within(i, 1), lower = near.filter(k => H[k][VA] < h[VA]).length;
+    const stats = el("div", "mh-stats");
+    [["#" + h[TR].toLocaleString("en-US") + " of " + t.n.toLocaleString("en-US"), "in " + TOWNS[h[TW]] + " · top " + Math.max(1, Math.ceil(h[TR] / t.n * 100)) + "%"],
+     ["#" + h[REG].toLocaleString("en-US") + " of " + H.length.toLocaleString("en-US"), "across all " + nTowns() + " towns"],
+     ["#" + (onStreet.indexOf(i) + 1) + " of " + onStreet.length, "on " + st],
+     [near.length ? Math.round(lower / near.length * 100) + "%" : "—", "of the " + near.length.toLocaleString("en-US") + " homes within 1 mile are worth less"]]
+      .forEach(([a, b]) => { const d = el("div"); d.append(el("strong", null, a), el("span", null, b)); stats.append(d); });
+    mhEl.append(stats);
+    const cols = el("div", "mh-cols");
+    const around = el("div"); around.append(el("p", "eyebrow", "Within a mile of you"));
+    const ul = el("ul", "mh-list");
+    if (near.length) {
+      const pr = near.reduce((a, k) => H[k][VA] > H[a][VA] ? k : a, near[0]);
+      const bg = near.reduce((a, k) => (H[k][FL] & F_SIZEBIG) ? a : a < 0 || H[k][SF] > H[a][SF] ? k : a, -1);
+      const ol = near.filter(k => H[k][YB] >= 1600).reduce((a, k) => a < 0 || H[k][YB] < H[a][YB] ? k : a, -1);
+      ul.append(homeRow("Priciest:", pr, valTxt(H[pr]) + " · " + miTxt(i, pr)));
+      if (bg >= 0) ul.append(homeRow("Biggest:", bg, sfTxt(H[bg]) + " · " + miTxt(i, bg)));
+      if (ol >= 0) ul.append(homeRow("Oldest:", ol, "built " + H[ol][YB] + " · " + miTxt(i, ol)));
+    }
+    let big = -1, bd = Infinity;
+    for (let k = 0; k < H.length; k++) if (k !== i && H[k][VA] >= 2e6) { const d = Math.hypot(H[k][X] - h[X], H[k][Y] - h[Y]); if (d < bd) { bd = d; big = k; } }
+    if (big >= 0) ul.append(homeRow("Nearest $2M+:", big, valTxt(H[big]) + " · " + miTxt(i, big)));
+    around.append(ul);
+    const sales = el("div"); sales.append(el("p", "eyebrow", "Recent sales near you"));
+    const sl = el("ul", "mh-list");
+    within(i, 1.5).filter(k => H[k][SY] >= "2024-01" && H[k][SP] >= 100000 && !(H[k][YB] && saleYear(H[k]) < H[k][YB]))
+      .sort((a, b) => H[b][SY].localeCompare(H[a][SY])).slice(0, 4)
+      .forEach(k => sl.append(homeRow(monShort(H[k][SY]) + ":", k, money(H[k][SP]) + " · " + miTxt(i, k))));
+    if (!sl.children.length) sl.append(el("li", "sub", "No recorded sales within 1.5 miles since January 2024."));
+    sales.append(sl);
+    cols.append(around, sales); mhEl.append(cols);
+    const act = el("div", "actions");
+    const sm = el("button", "btn-2 btn-sm", "Show on map"); sm.type = "button"; sm.addEventListener("click", () => select(i, { reveal: "always", zoom: true }));
+    const nm = el("button", "btn-2 btn-sm", "Rank homes near me"); nm.type = "button";
+    nm.addEventListener("click", () => { setSpot({ x: h[X], y: h[Y] }); document.getElementById("explorer").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" }); });
+    const chg = el("button", "btn-2 btn-sm", "Change"); chg.type = "button"; chg.addEventListener("click", () => { state.home = -1; store.set("tt-home", ""); renderMyHome(); });
+    act.append(sm, nm, chg); mhEl.append(act);
+  }
+
+  // ---------------- collections ----------------
+  const collChips = document.getElementById("coll-chips"), collBody = document.getElementById("coll-body");
+  let collView = "hidden";
+  function renderColl() {
+    collChips.replaceChildren();
+    D.colls.forEach(c => {
+      const b = el("button", null, c.t); b.type = "button"; b.setAttribute("aria-pressed", String(c.k === collView));
+      b.addEventListener("click", () => { collView = c.k; renderColl(); }); collChips.append(b);
+    });
+    const c = D.colls.find(x => x.k === collView);
+    collBody.replaceChildren();
+    const head = el("div", "coll-head"); head.append(el("p", null, c.d));
+    const list = el("ol", "coll-list");
+    if (c.streets) {
+      const rows = (c.streets[scopeKey()] || []).slice(0, 12);
+      rows.forEach((s, n) => {
+        const li = el("li"), b = el("button", "linkish", s[0] + ", " + TOWNS[s[1]]); b.type = "button";
+        b.addEventListener("click", () => showStreet(s[0], s[4]));
+        li.append(el("span", "rk", String(n + 1)), b, el("span", "stat", "median " + short(s[2]) + " · " + s[3] + " homes"));
+        list.append(li);
+      });
+      collBody.append(head, list); return;
+    }
+    const items = c.items[scopeKey()] || [];
+    const all = el("button", "btn-2 btn-sm", "See all " + items.length + " on the map"); all.type = "button";
+    all.addEventListener("click", () => {
+      state.coll = c.k; state.near = false; nearBtn.setAttribute("aria-pressed", "false"); drawSpot(); state.shown = 50; render();
+      if (!state.view3d) fitResults();
+      document.getElementById("map-panel").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    });
+    if (items.length) head.append(all);
+    collBody.append(head);
+    if (!items.length) { collBody.append(el("p", "sub", "None in " + scopeName() + ".")); return; }
+    items.slice(0, 12).forEach((i, n) => {
+      const h = H[i], li = el("li");
+      const b = el("button", "linkish", h[AD] + ", " + TOWNS[h[TW]]); b.type = "button"; b.addEventListener("click", () => select(i, { reveal: "always", zoom: true }));
+      li.append(el("span", "rk", String(n + 1)), b, el("span", "stat", [].concat(COLL_STAT[c.k](i)).join(" · ") + " · " + valTxt(h)));
+      list.append(li);
+    });
+    collBody.append(list);
+  }
+
+  // ---------------- notes ----------------
+  const andList = a => a.length < 2 ? a.join("") : a.length === 2 ? a[0] + " and " + a[1] : a.slice(0, -1).join(", ") + ", and " + a[a.length - 1];
+  function renderNotes() {
+    document.getElementById("note-line").textContent = D.lineCount + " houses straddle a town line";
+    const hi = D.hiRatio, parts = [], few = [];
+    Object.keys(hi).forEach(t => { const [r, n] = hi[t]; if (r == null) few.push(t); else parts.push([t, r, n]); });
+    parts.sort((a, b) => b[1] - a[1]);
+    const pct = r => { const p = Math.round((r - 1) * 100); return (p > 0 ? "+" : p < 0 ? "−" : "±") + Math.abs(p) + "%"; };
+    let txt = "Sales of $1.5 million or more since 2024, compared with the same homes' assessments: " +
+      parts.map(([t, r, n]) => t + " " + pct(r) + (n < 10 ? " (only " + n + " sales)" : "")).join(", ") + ".";
+    if (few.length) txt += " " + few.join(" and ") + (few.length > 1 ? " have" : " has") + " too few sales that size to compare.";
+    const solid = parts.filter(p => p[2] >= 10);
+    if (solid.length >= 2 && solid[0][1] - solid[solid.length - 1][1] >= 0.05)
+      txt += " So a big house in " + solid[0][0] + " may be worth a bit more, next to one in " + solid[solid.length - 1][0] + ", than their assessments suggest.";
+    const byYear = {};
+    D.towns.forEach(t => (byYear[t.fy - 1] = byYear[t.fy - 1] || []).push(t.name));
+    const yrs = Object.keys(byYear).map(Number).sort();
+    if (yrs.length > 1) {
+      const common = yrs.reduce((a, y) => byYear[y].length > byYear[a].length ? y : a, yrs[0]);
+      const odd = yrs.filter(y => y !== common).map(y => andList(byYear[y]) + " as of January " + y);
+      txt += " Most towns are valued as of January " + common + ", " + andList(odd) + "; with prices rising a few percent a year, that timing is part of these gaps.";
+    }
+    document.getElementById("note-cross").textContent = txt;
+  }
+
+  // ---------------- boot ----------------
+  async function boot() {
+    const msg = document.getElementById("boot-msg"), bootEl = document.getElementById("boot");
+    if (!("DecompressionStream" in window) || !("fetch" in window)) {
+      msg.textContent = "This browser is too old to open the atlas. The current Chrome, Safari, Edge, or Firefox will work.";
+      bootEl.querySelector(".bar").remove(); return;
+    }
+    try { D = await loadZ("homes.json"); }
+    catch (e) {
+      msg.textContent = "Couldn't load the home data. ";
+      const b = el("button", "btn-2 btn-sm", "Try again"); b.type = "button"; b.addEventListener("click", () => location.reload());
+      bootEl.querySelector(".bar").replaceWith(b); return;
+    }
+    decode(D);
+    full = { x: 0, y: 0, w: D.W, h: D.H };
+    readColors();
+    buildScopeTabs();
+    document.getElementById("page").classList.remove("booting");
+    bootEl.hidden = true;
+    buildLabels();
+    state.spot = loadSpot();
+    try {
+      const sh = JSON.parse(store.get("tt-home") || "null");
+      if (sh && TOWNS[sh.t]) {
+        state.home = TH[sh.t].find(g => H[g][AD] === sh.a) ?? -1;
+        if (state.home < 0 && sh.p) { pendingHome = { t: sh.t, p: sh.p }; ensureTown(sh.t).catch(() => {}); }
+      }
+    } catch (e) {}
+    renderMyHome(); renderColl(); renderNotes();
+    renderLeaders(); renderStats(); renderRecords();
+    if ("ResizeObserver" in window) new ResizeObserver(() => resize()).observe(wrap);
+    else window.addEventListener("resize", resize);
+    resize();
+    render();
+    select(0, {});
+    setPicking(false);
+    if (state.spot) drawSpot();
+  }
+  boot();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+
+<main class="page booting" id="page">
+  <header class="masthead">
+    <p class="eyebrow">Andover · Beverly · Boxford · Georgetown · Gloucester · Ipswich · Lynn · Lynnfield · Marblehead · Middleton · Newburyport · North Andover · Salem · Swampscott · Topsfield · FY2025–27 assessments</p>
+    <h1>Essex County Home Atlas</h1>
+    <p class="lede">Every house in fifteen Essex County towns, ranked by value, with the assessor's blind spots corrected and every pin on the actual house.</p>
+  </header>
+
+  <div class="boot" id="boot" role="status" aria-live="polite">
+    <span id="boot-msg">Loading about 113,000 homes…</span>
+    <span class="bar" aria-hidden="true"><i></i></span>
+  </div>
+
+  <section class="myhome" id="myhome" aria-label="My home"></section>
+
+  <div class="top">
+    <nav class="scope" id="scope" role="tablist" aria-label="Town"></nav>
+    <section class="leaders" id="leaders" aria-live="polite"></section>
+  </div>
+
+  <section class="stats" id="stats" aria-label="Summary"></section>
+
+  <section class="records" aria-labelledby="rec-h">
+    <h2 class="h2" id="rec-h">Records</h2>
+    <div class="rec-grid" id="records"></div>
+  </section>
+
+  <section class="colls" aria-labelledby="coll-h">
+    <h2 class="h2" id="coll-h">Collections</h2>
+    <div class="chips" id="coll-chips" role="group" aria-label="Collections"></div>
+    <div class="coll-body" id="coll-body"></div>
+  </section>
+
+
+  <section class="explorer" id="explorer" aria-labelledby="explore-h">
+    <h2 class="h2" id="explore-h">Explore every home</h2>
+    <div class="controls">
+      <label class="search">
+        <span class="sr-only">Search addresses</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke-width="2"></circle><path d="M20 20l-3.5-3.5" stroke-width="2" stroke-linecap="round"></path></svg>
+        <input id="q" type="search" placeholder="Search an address or street" autocomplete="off">
+      </label>
+      <div class="chips" id="chips" role="group" aria-label="Filter homes">
+        <button type="button" data-t="" aria-pressed="true">All</button>
+        <button type="button" data-t="S" aria-pressed="false">Single-family</button>
+        <button type="button" data-t="C" aria-pressed="false">Condos</button>
+        <button type="button" data-t="MF" aria-pressed="false">Multi-family</button>
+        <button type="button" data-t="F" aria-pressed="false">On open land</button>
+        <button type="button" data-t="!" aria-pressed="false">Has a caveat</button>
+      </div>
+      <label class="sel-ctl">Sort by
+        <select id="sort">
+          <option value="value">Value (corrected)</option>
+          <option value="assessed">Assessed value</option>
+          <option value="house">House value (no land)</option>
+          <option value="sqft">Living area</option>
+          <option value="acres">Lot size</option>
+          <option value="oldest">Oldest</option>
+          <option value="newest">Newest</option>
+        </select>
+      </label>
+      <div class="near-ctl">
+        <button type="button" class="btn-2 btn-sm" id="near" aria-pressed="false">Near my spot</button>
+        <label class="sel-ctl"><span class="sr-only">Radius</span>
+          <select id="radius-sel">
+            <option value="0.5">within ½ mile</option>
+            <option value="1" selected>within 1 mile</option>
+            <option value="2">within 2 miles</option>
+            <option value="5">within 5 miles</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div class="explorer-body">
+      <div class="map-panel" id="map-panel">
+        <div class="map-toolbar">
+          <div class="seg" role="group" aria-label="Map view">
+            <button type="button" id="v2d" aria-pressed="true">Map</button>
+            <button type="button" id="v3d" aria-pressed="false">3D skyline</button>
+          </div>
+          <button type="button" class="btn-2 btn-sm" id="setspot">Set my spot</button>
+        </div>
+        <div class="legend" aria-label="Map key">
+          <span><i class="s1"></i>Under $750K</span>
+          <span><i class="s2"></i>$750K–1M</span>
+          <span><i class="s3"></i>$1–1.5M</span>
+          <span><i class="s4"></i>$1.5–2M</span>
+          <span><i class="s5"></i>$2M+</span>
+          <span><i class="s0"></i>Not a home</span>
+        </div>
+        <div class="map-wrap" id="map-wrap">
+          <canvas id="base" aria-hidden="true"></canvas>
+          <canvas id="map" role="img" aria-label="Map of Andover, Beverly, Boxford, Georgetown, Gloucester, Ipswich, Lynn, Lynnfield, Marblehead, Middleton, Newburyport, North Andover, Salem, Swampscott, and Topsfield with every home shaded by value"></canvas>
+          <div class="overlay" id="overlay"></div>
+          <div class="zoom" id="zoom">
+            <button type="button" id="zin" aria-label="Zoom in">+</button>
+            <button type="button" id="zout" aria-label="Zoom out">−</button>
+            <button type="button" id="zfit" aria-label="Show the whole area">⤢</button>
+          </div>
+          <button type="button" class="btn-2 btn-sm fitres" id="fitres" hidden>Zoom to results</button>
+          <div class="map-hint" id="hint" hidden>Tap the map where you live</div>
+          <div class="lod-note" id="lod-note" hidden><span class="lod-long">Each square is a home. </span>Zoom in for lot lines.</div>
+          <div class="tip" id="tip" hidden></div>
+          <div id="sky3d" hidden></div>
+          <div class="deck-note" id="deck-note" hidden></div>
+        </div>
+        <div class="selected" id="selected" aria-live="polite"></div>
+      </div>
+
+      <div class="list-panel">
+        <div class="list-meta"><span id="count"></span><span class="coll-pill" id="coll-pill" hidden></span><span id="rank-note"></span></div>
+        <ol class="rows" id="rows"></ol>
+        <div class="more" id="more-wrap">
+          <button type="button" class="btn-2" id="more">Show 50 more</button>
+          <button type="button" class="btn-2" id="all">Show all</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="notes" aria-labelledby="notes-h">
+    <h2 class="h2" id="notes-h">Traps this atlas corrects</h2>
+    <ul>
+      <li><b>Apartment blocks coded as homes.</b> Some cities code big apartment buildings with ground-floor shops as “mixed use, primarily residential,” the same class as a house with a home business. Lynn has about a hundred of them, including a 10-story, $100 million tower that would otherwise rank as the region's most valuable “home.” Mixed-use records that are apartment or commercial buildings (by building style, or 8,000+ sq ft) are left out, along with office and retail condos and condo records that cover a whole building. So are apartment blocks that Salem and Gloucester code as “multiple houses,” and a 12-acre parcel on Nonantum Road in Marblehead with more than 30 buildings on it, recorded as a single $27.6 million “home.”</li>
+      <li><b>Farm, forest, and recreation land.</b> Land in the state's Chapter 61, 61A, and 61B programs is assessed at its use value, far below market. For houses on 5+ acres of it, the land is re-valued like similar-size lots in the same town, tagged “Land corrected.”</li>
+      <li><b>Protected land.</b> If a permanent conservation or agricultural preservation restriction covers at least a quarter of a lot (from the state's protected open space map), the land can't be developed and its low value is real. Those lots are never re-valued. This is why 68 River Rd in Topsfield and Arden in Andover aren't inflated.</li>
+      <li><b>Valued by sale.</b> When a property's assessment is known to be off (farm, forest, or protected land, estates, big houses assessed low) and it sold within about ten years of its town's valuation date, the sale is adjusted to that date (January 1, 2025 for most towns) using the town's own sales: each year's sales are compared with the same homes' current assessments. If that says it's worth more, the sale-based value is used. Older sales are shown for context only: houses and markets change too much in a decade, and a conservation restriction is often granted after the purchase. Bulk transfers aren't counted as sales: in August 2012, 64 Little Neck cottages in Ipswich changed hands on one day for about $180,000 each, as the owners bought their land shares in a condo conversion, not the homes at market price.</li>
+      <li><b>Recent sales the assessor hasn't caught up with.</b> A home that sold in the year before its town's valuation date or since (2024 or later for most towns) for at least 15% more than its assessment, after that same market adjustment, is valued by its sale. Renovations and one-of-a-kind houses are the usual reason. The biggest case is 24 Phillips St in Andover, which sold for $8.5 million in July 2025 against a $6.39 million assessment.</li>
+      <li><b>Estates split across parcels.</b> Parcels sold together on one deed are grouped as an estate, with a combined size and value. Packages that include apartment or commercial buildings, a builder's subdivision lots, or a landlord's several houses aren't estates, so they're left ungrouped.</li>
+      <li><b>Unfinished new builds.</b> Houses built in the year before their town's valuation date or since (2024 or later for most towns) and valued at less than half the town's per-square-foot norm for recent builds were probably assessed before they were finished. They're valued as finished at that norm (the land plus the living area at the norm), marked ≈.</li>
+      <li><b>Sizes that don't add up.</b> Every house's recorded living area is checked against three independent clues: the assessor's own gross building area (living space plus basement, garage, and porches), scaled by what's typical for that kind of house in that town; the building's outline on aerial photos times its stories; and what the house value works out to at typical prices for similar homes. Beverly, Marblehead, and Salem record no separate gross area, so there the outline and the value have to agree on their own.
+        <ul>
+          <li><b>Size corrected:</b> when every clue says the record is far off, the house gets the middle estimate, marked ≈, and stays in every ranking at that size. The bar is lower when the record contradicts itself, like a living area bigger than the whole building's gross area. The biggest fix is 6 Lils Way in Lynnfield: 17,218 sq ft recorded, about 5,760 by the clues.</li>
+          <li><b>Size looks understated:</b> the outline and the value both say bigger, but the clues don't agree closely enough to pin down a number, so the recorded size stays and the home is flagged.</li>
+          <li><b>Value low for size:</b> the house itself is valued under 40% of similar homes per square foot. Usually condition, a deed restriction, an unusual use, or a data error. If it sold within about ten years for more, adjusted to its town's valuation date, the sale is used instead.</li>
+          <li><b>Value high for size:</b> at least 2.5 times similar homes per square foot, when the outline doesn't confirm the recorded size, or other big buildings on the lot could explain it.</li>
+        </ul>
+        The outlines come from the state's building layer, traced mostly from 2011 aerial photos with newer buildings added from later flights, so an addition built since then can make an outline look small. The “Size doesn't add up” collection lists every corrected and flagged home.</li>
+      <li><b>Gross area filed as living area.</b> Salem's assessor puts each house's gross area (basement, attic, and porches included) in the living-area field: about 460 sq ft per room, against about 300 in the other towns. Salem sizes here are estimated living areas, marked ≈: the gross area times the share that's usually living space for the same kind of house (stories, age, one or several units) in the towns that record both, about 59% on average. 29 Chestnut St, for one, is recorded at 17,297 sq ft gross, about 10,990 of it living space.</li>
+      <li><b>Why tags.</b> Every home worth $1 million or more gets a tag naming the biggest reason for its value. The value is split into land (what a lot that size usually carries in town, and anything above that for location) and house (what a house that size usually carries, and anything above that for build quality), each against what's typical in that town. <i>Waterfront</i> means the lot touches the ocean, a harbor, a tidal flat, a river, or a lake or pond of 5+ acres on the state's water maps, with no road in between; <i>Near the ocean</i> means within about 800 feet of it. A second tag shows when another reason is at least half as big, or when a lot on or near the water has a land premium. <i>Typical for town</i> means nothing stands out: that's what homes cost there.</li>
+      <li><b>Land purchases.</b> A “last sale” from before the house was built was a land purchase, and it's labeled that way instead of as the home's price.</li>
+      <li><b>Town-line houses.</b> <span id="note-line">Some houses straddle a town line</span>, so part of their value may be taxed by the neighboring town. They're flagged.</li>
+      <li><b>Pins on the actual house.</b> Each home is matched to its building in the state's building outlines, choosing the one that fits the house's size, not a barn or riding arena. When a lot line cuts through the house (parcel maps and outlines don't always line up), the pin still goes on the house.</li>
+      <li><b>Cross-town comparisons.</b> <span id="note-cross">Each town's assessor tracks the market a little differently.</span> Treat cross-town gaps under about 10% as ties.</li>
+      <li><b>Other things to know:</b> values are each town's latest assessment in the state's parcel data: fiscal 2026 (market value as of January 1, 2025) for most towns, fiscal 2025 (January 1, 2024) for Marblehead, and fiscal 2027 (January 1, 2026) for Beverly and Swampscott. Prices have been rising about 3–6% a year, so Marblehead runs a little low next to the rest, and Beverly and Swampscott a little high. Condo values are per unit. For lots with several houses, the value and the living area cover all of them. Two- and three-family houses are included; apartment buildings of four or more units aren't. Homes owned by churches, schools, or nonprofits aren't included.</li>
+    </ul>
+    <p class="source">Sources: MassGIS Property Tax Parcels (FY2025–27 assessor data for all fifteen towns), MassGIS Building Structures (outlines traced from 2011–2025 aerial photos), MassDOT Roads, MassGIS Protected and Recreational Open Space, and MassDEP 1:25,000 Hydrography, retrieved September 24 to October 4, 2026. Landmark notes cite their own sources.</p>
+  </section>
+</main>
